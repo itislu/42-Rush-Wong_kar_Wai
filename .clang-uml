@@ -1,0 +1,13 @@
+compilation_database_dir: .
+output_directory: docs/uml
+diagrams:
+  file_organization:
+    type: include
+    glob:
+      - source/*
+      - include/*
+    include:
+      paths:
+        - source
+      relationships:
+        - composition
