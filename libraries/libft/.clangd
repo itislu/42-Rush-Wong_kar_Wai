@@ -1,5 +1,5 @@
 CompileFlags:
-  Add: [-Wall, -Wextra, -Werror, --language=c, "-Iinc"]
+  Add: [-Wall, -Wextra, -Werror, -Wpedantic, -Wdocumentation, --language=c]
   Compiler: cc
 
 Diagnostics:
