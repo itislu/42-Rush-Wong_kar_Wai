@@ -61,11 +61,13 @@ ARFLAGS			:=	rcs
 #	Valgrind
 
 VALGRIND		:=	$(shell which valgrind 2>/dev/null || echo "valgrind")
+SUPPRESSIONS	:=	$(REPO_ROOT)/ncurses.supp
 
 VALGRINDFLAGS	=	--errors-for-leak-kinds=all \
 					--leak-check=full \
 					--show-error-list=yes \
 					--show-leak-kinds=all \
+					--suppressions=$(SUPPRESSIONS) \
 					--trace-children=yes \
 					--track-origins=yes
 
