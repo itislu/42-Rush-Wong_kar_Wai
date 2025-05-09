@@ -19,7 +19,6 @@ UML_OUTDIR		:=	$(DOC_DIR)/uml
 
 bear			:	.bear-image
 					docker run --rm \
-						-u $(shell id -u):$(shell id -g) \
 						-v $(REPO_ROOT):$(REPO_ROOT) \
 						-w $(PWD) \
 						$(BEAR_IMG) \
@@ -36,7 +35,6 @@ bear			:	.bear-image
 doxygen			:	.doxygen-image bear $(DOXYFILE)
 					mkdir -p $(DOXYGEN_OUTDIR)
 					docker run --rm \
-						-u $(shell id -u):$(shell id -g) \
 						-v $(REPO_ROOT):$(REPO_ROOT) \
 						-w $(PWD) \
 						$(DOXYGEN_IMG) \
@@ -51,7 +49,6 @@ doxygen			:	.doxygen-image bear $(DOXYFILE)
 
 $(DOXYFILE)		:	| .doxygen-image
 					docker run --rm \
-						-u $(shell id -u):$(shell id -g) \
 						-v $(REPO_ROOT):$(REPO_ROOT) \
 						-w $(PWD) \
 						$(DOXYGEN_IMG) \
@@ -69,7 +66,6 @@ uml				:	.clang-uml .plantuml-image
 .clang-uml		:	.clang-uml-image bear $(CLANG_UML_CFG)
 					mkdir -p $(UML_OUTDIR)
 					docker run --rm \
-						-u $(shell id -u):$(shell id -g) \
 						-v $(REPO_ROOT):$(REPO_ROOT) \
 						-w $(PWD) \
 						$(CLANG_UML_IMG) \
@@ -79,7 +75,6 @@ uml				:	.clang-uml .plantuml-image
 
 $(CLANG_UML_CFG):	| .clang-uml-image
 					docker run --rm \
-						-u $(shell id -u):$(shell id -g) \
 						-v $(REPO_ROOT):$(REPO_ROOT) \
 						-w $(PWD) \
 						$(CLANG_UML_IMG) \
@@ -96,7 +91,6 @@ $(CLANG_UML_CFG):	| .clang-uml-image
 					$(call PRINTLN,"Converting PlantUML files to PNG and SVG ...")
 					mkdir -p $(UML_OUTDIR)
 					docker run --rm \
-						-u $(shell id -u):$(shell id -g) \
 						-v $(REPO_ROOT):$(REPO_ROOT) \
 						-w $(PWD) \
 						$(PLANTUML_IMG) \
@@ -105,7 +99,6 @@ $(CLANG_UML_CFG):	| .clang-uml-image
 					open $(UML_OUTDIR)
 					$(call PRINTLN,"Converting PlantUML files to PDF '('this may take a moment')' ...")
 					docker run --rm \
-						-u $(shell id -u):$(shell id -g) \
 						-v $(REPO_ROOT):$(REPO_ROOT) \
 						-w $(PWD) \
 						$(PLANTUML_IMG) \
