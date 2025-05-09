@@ -447,7 +447,7 @@ bool is_win_condition(int grid[GRID_SIZE][GRID_SIZE])
 
 bool display_win()
 {
-	int input;
+	// int input;
 	printw("\n\n        YOU WON");
 	printw("\nDo you want to continue? (y/n)");
 	/* while (1)
@@ -455,7 +455,7 @@ bool display_win()
 		input = getch();
 		if
 	} */
-
+	return (true);
 }
 
 void game_loop(int grid[GRID_SIZE][GRID_SIZE])
