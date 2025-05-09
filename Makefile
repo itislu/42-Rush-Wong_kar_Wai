@@ -7,6 +7,8 @@ NAME			:=	2048
 MSG_PROGRESS	:=	"🟨"
 MSG_USAGE		?=	"Usage: ./$(NAME)"
 COLOR_MAKE		=	$(STY_GRE)
+LIBS_LOCAL		=	
+LIBS_EXTERN		:=	
 
 
 #	Files

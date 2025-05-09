@@ -146,7 +146,7 @@ $(NAME)			:	$(OBJ)
 						&& echo -e -n $(MSG_ARCHIVE)
 else
 #	Executable
-$(NAME)			:	$(LIBRARIES) $(OBJ)
+$(NAME)			:	$(LIBS_LOCAL) $(OBJ)
 					$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ) $(LDLIBS) -o $(NAME) \
 						&& echo -e -n $(MSG_LINK)
 endif

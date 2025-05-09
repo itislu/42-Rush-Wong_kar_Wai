@@ -12,7 +12,8 @@ COLOR_MAKE		?=	$(STY_GRE)
 IS_LIB			?=	$(if $(filter %.a,$(NAME)),true)
 SRC_DIR			?=	src
 SRC				?=	
-LIBRARIES		?=	
+LIBS_LOCAL		?=	
+LIBS_EXTERN		?=	
 CPPFLAGS		?=	
 
 
@@ -25,8 +26,8 @@ BUILDFILES		=	$(filter-out %.d,$(MAKEFILE_LIST))
 
 #	Directories
 
-LIB_ROOT_DIR	:=	$(REPO_ROOT)/lib
-LIB_DIRS		:=	$(dir $(LIBRARIES))
+LIB_ROOT_DIR	:=	$(REPO_ROOT)/libraries
+LIB_DIRS		:=	$(dir $(LIBS_LOCAL))
 INC_DIRS		:=	include $(SRC_DIR) $(LIB_ROOT_DIR)
 BUILD_DIR		:=	build
 OBJ_DIR			:=	$(BUILD_DIR)/_obj
@@ -52,7 +53,7 @@ CPPFLAGS_OPT	:=	-D NDEBUG
 CPPFLAGS		+=	$(addprefix -I,$(INC_DIRS))
 DEPFLAGS		=	-M -MP -MF $@ -MT "$(OBJ_DIR)/$*.o $@"
 LDFLAGS			:=	$(addprefix -L,$(LIB_DIRS))
-LDLIBS			:=	$(addprefix -l,$(patsubst lib%,%,$(notdir $(basename $(LIBRARIES)))))
+LDLIBS			:=	$(addprefix -l,$(patsubst lib%,%,$(notdir $(basename $(LIBS_LOCAL))) $(LIBS_EXTERN)))
 AR				:=	ar
 ARFLAGS			:=	rcs
 
