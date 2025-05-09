@@ -473,6 +473,18 @@ void game_loop(int grid[GRID_SIZE][GRID_SIZE])
 		input = getch();
 		if (input == KEY_RESIZE)
 		{
+			int y;
+			int x;
+			getmaxyx(stdscr, y, x);
+			while (y < 20 || x < 40)
+			{
+				clear();
+				printw("SMALL: y: %d x: %d", y, x);
+				input = getch();
+				if (input == 'q' || input == 27)
+					break;
+				getmaxyx(stdscr, y, x);
+			}
 			print_grid(grid);
 			continue;
 		}
