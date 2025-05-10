@@ -1,12 +1,12 @@
 #include "header.h"
 #include "grid.h"
 #include "libft/libft.h"
+#include "menu.h"
 #include <ncurses.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <signal.h>
 
 int sig = 0;
 
@@ -618,9 +618,20 @@ void init_windows(t_grid *grid)
 
 int main(void)
 {
+	init_ncurses();
 	int grid_size;
+	switch (popup_menu("Choose a grid size", (const char *[]){"4x4", "5x5", NULL})) {
+	case 0:
+		grid_size = 4;
+		break;
+	case 1:
+		grid_size = 5;
+		break;
+	default:
+		endwin();
+		return 0;
+	}
 
-	grid_size = 5; //comes from menu
 	int grid_data[grid_size][grid_size];
 	t_grid grid = {.data = (int *)grid_data, .size = grid_size};
 	if (grid_size == 4)
@@ -633,7 +644,6 @@ int main(void)
 		grid.box_height = 5;
 		grid.box_width = 10;
 	}
-	init_ncurses();
 	init_windows(&grid);
 	init_grid(&grid);
 	print_grid(&grid);
