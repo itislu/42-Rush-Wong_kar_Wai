@@ -69,26 +69,15 @@ void print_grid(t_grid *grid)
 		// 		continue;
 		// 	}
 			attron(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD);
-			int y = i * BOX_HEIGHT;
-			int x = j * BOX_WIDTH;
+			int y = i * grid->box_height;
+			int x = j * grid->box_width;
 			move(y, x);
-			printw("      ");
-			move(y + 1, x);
-			if (*grid_at(grid, i, j) < 10)
-				printw("  %d   ", *grid_at(grid, i, j));
-			else if (*grid_at(grid, i, j) < 100)
-				printw("  %d  ", *grid_at(grid, i, j));
-			else if (*grid_at(grid, i, j) < 1000)
-				printw(" %d  ", *grid_at(grid, i, j));
-			else if (*grid_at(grid, i, j) < 10000)
-				printw(" %d ", *grid_at(grid, i, j));
-			else if (*grid_at(grid, i, j) < 100000)
-				printw("%d ", *grid_at(grid, i, j));
-			else if (*grid_at(grid, i, j) < 1000000)
-				printw("%d", *grid_at(grid, i, j));
-			move(y + 2, x);
-			printw("      ");
+			for(int i = 0; i < grid->box_height; i++)
+				mvprintw(y + i, x, "%*c", grid->box_width, ' ');
+			move(y + grid->box_height / 2, x + ((grid->box_width - ft_nbrlen_base(*grid_at(grid, i, j), 10)) / 2));
+			printw("%d", *grid_at(grid, i, j));
 			attroff(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))));
+			move (y + grid->box_height, x); 
 			j++;
 		}
 		i++;
@@ -380,7 +369,7 @@ int validate_if_lost(t_grid *grid)
 int validate_move(t_grid *grid, int input)
 {
 	int tmp_grid_data[grid->size][grid->size];
-	t_grid tmp_grid = {(int *)tmp_grid_data, grid->size};
+	t_grid tmp_grid = {.data = (int *)tmp_grid_data, .size = grid->size};
 	ft_memcpy(tmp_grid.data, grid->data, grid->size * grid->size * sizeof(*grid->data));
 
 	if (input == KEY_UP)
@@ -603,10 +592,20 @@ int main(void)
 {
 	int grid_size;
 
-	grid_size = 4;
+	grid_size = 5; //comes from menu
 	int grid_data[grid_size][grid_size];
-	t_grid grid = {(int *)grid_data, grid_size};
-
+	t_grid grid = {.data = (int *)grid_data, .size = grid_size};
+	if (grid_size == 4)
+	{
+		grid.box_height = 3;
+		grid.box_width = 6;
+	}
+	else
+	{
+		grid.box_height = 5;
+		grid.box_width = 10;
+	}
+	
 	init_ncurses();
 	init_grid(&grid);
 	print_grid(&grid);

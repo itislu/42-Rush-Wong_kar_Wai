@@ -3,9 +3,6 @@
 
 #include <ncurses.h>
 
-#define BOX_HEIGHT 3
-#define BOX_WIDTH 6
-
 #define COLOR_2 2
 #define COLOR_4 3
 #define COLOR_8 4
