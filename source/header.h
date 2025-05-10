@@ -2,6 +2,7 @@
 #define HEADER_H
 
 #include <ncurses.h>
+#include "grid.h"
 
 enum e_colors 
 {
@@ -23,6 +24,7 @@ enum e_colors
 	COLOR_65536,
 	COLOR_131072,
 	COLOR_DARK,
+	COLOR_EMPTY,
 };
 
 #define ESCAPE 27
@@ -31,5 +33,9 @@ enum e_const
 {
 	WIN_VALUE = 2048
 };
+
+void print_grid(t_grid *grid);
+void init_windows(t_grid *grid);
+bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width);
 
 #endif
