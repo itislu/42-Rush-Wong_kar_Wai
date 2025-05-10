@@ -28,7 +28,7 @@ int popup_menu(const char *title, const char *options[])
 	refresh();
 	keypad(win, true);
 
-	mvwprintw(win, 0, (width - title_len) / 2, " %s ", title);
+	mvwprintw(win, 0, (width - title_len - 2 /*spaces*/) / 2, " %s ", title);
 
 	int cur_option = 0;
 	while (true) {
