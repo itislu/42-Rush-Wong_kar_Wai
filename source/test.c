@@ -567,11 +567,11 @@ void init_ncurses(void)
 	start_color();
 	use_default_colors();
 	init_color(COLOR_WHITE, rgb_to_ncurses(255), rgb_to_ncurses(255), rgb_to_ncurses(255));
-	init_pair(1, COLOR_WHITE, -1);
+	init_color(COLOR_DARK, rgb_to_ncurses(117),rgb_to_ncurses(100),rgb_to_ncurses(82));
 	init_color(COLOR_2, rgb_to_ncurses(238),rgb_to_ncurses(228),rgb_to_ncurses(219));
-	init_pair(COLOR_2, COLOR_WHITE, COLOR_2);
+	init_pair(COLOR_2, COLOR_DARK, COLOR_2);
 	init_color(COLOR_4, rgb_to_ncurses(238),rgb_to_ncurses(224),rgb_to_ncurses(203));
-	init_pair(COLOR_4, COLOR_WHITE, COLOR_4);
+	init_pair(COLOR_4, COLOR_DARK, COLOR_4);
 	init_color(COLOR_8, rgb_to_ncurses(243),rgb_to_ncurses(178),rgb_to_ncurses(122));
 	init_pair(COLOR_8, COLOR_WHITE, COLOR_8);
 	init_color(COLOR_16, rgb_to_ncurses(246),rgb_to_ncurses(150),rgb_to_ncurses(100));
@@ -603,6 +603,7 @@ void init_ncurses(void)
 	init_color(COLOR_131072, rgb_to_ncurses(237),rgb_to_ncurses(160),rgb_to_ncurses(0));
 	init_pair(COLOR_131072, COLOR_WHITE, COLOR_131072);
 }
+
 WINDOW *create_win(int size_y, int size_x , int pos_y, int pox_x)
 {
 	WINDOW *win = newwin(size_y, size_x, pos_y, pox_x);

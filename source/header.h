@@ -3,23 +3,27 @@
 
 #include <ncurses.h>
 
-#define COLOR_2 2
-#define COLOR_4 3
-#define COLOR_8 4
-#define COLOR_16 5
-#define COLOR_32 6
-#define COLOR_64 8
-#define COLOR_128 9
-#define COLOR_256 10
-#define COLOR_512 11
-#define COLOR_1024 12
-#define COLOR_2048 13
-#define COLOR_4096 14
-#define COLOR_8192 15
-#define COLOR_16384 16
-#define COLOR_32768 17
-#define COLOR_65536 18
-#define COLOR_131072 19
+enum e_colors 
+{
+	COLOR_2 = 100,
+	COLOR_4,
+	COLOR_8,
+	COLOR_16,
+	COLOR_32,
+	COLOR_64,
+	COLOR_128,
+	COLOR_256,
+	COLOR_512,
+	COLOR_1024,
+	COLOR_2048,
+	COLOR_4096,
+	COLOR_8192,
+	COLOR_16384,
+	COLOR_32768,
+	COLOR_65536,
+	COLOR_131072,
+	COLOR_DARK,
+};
 
 #define ESCAPE 27
 
