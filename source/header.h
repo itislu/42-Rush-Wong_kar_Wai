@@ -2,9 +2,7 @@
 #define HEADER_H
 
 #include <ncurses.h>
-#include <stdbool.h>
 
-#define GRID_SIZE 4
 #define BOX_HEIGHT 3
 #define BOX_WIDTH 6
 

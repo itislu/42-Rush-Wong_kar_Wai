@@ -1,9 +1,12 @@
 #include "header.h"
+#include "grid.h"
+#include "libft/libft.h"
 #include <ncurses.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <signal.h>
 
 int sig = 0;
 
@@ -49,43 +52,43 @@ int	get_correct_color(int num)
 	}
 }
 
-void print_grid(int grid[GRID_SIZE][GRID_SIZE])
+void print_grid(t_grid *grid)
 {
 	int i = 0;
 	int j;
 	move(0, 0);
 	clear();
-	while (i < GRID_SIZE)
+	while (i < grid->size)
 	{
 		j = 0;
-		while (j < GRID_SIZE)
+		while (j < grid->size)
 		{
-		// 	if (grid[i][j] == 0)
+		// 	if (*grid_at(grid, i, j) == 0)
 		// 	{
 		// 		j++;
 		// 		continue;
 		// 	}
-			attron(COLOR_PAIR(get_correct_color(grid[i][j])) | A_BOLD);
+			attron(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD);
 			int y = i * BOX_HEIGHT;
 			int x = j * BOX_WIDTH;
 			move(y, x);
 			printw("      ");
 			move(y + 1, x);
-			if (grid[i][j] < 10)
-				printw("  %d   ", grid[i][j]);
-			else if (grid[i][j] < 100)
-				printw("  %d  ", grid[i][j]);
-			else if (grid[i][j] < 1000)
-				printw(" %d  ", grid[i][j]);
-			else if (grid[i][j] < 10000)
-				printw(" %d ", grid[i][j]);
-			else if (grid[i][j] < 100000)
-				printw("%d ", grid[i][j]);
-			else if (grid[i][j] < 1000000)
-				printw("%d", grid[i][j]);
+			if (*grid_at(grid, i, j) < 10)
+				printw("  %d   ", *grid_at(grid, i, j));
+			else if (*grid_at(grid, i, j) < 100)
+				printw("  %d  ", *grid_at(grid, i, j));
+			else if (*grid_at(grid, i, j) < 1000)
+				printw(" %d  ", *grid_at(grid, i, j));
+			else if (*grid_at(grid, i, j) < 10000)
+				printw(" %d ", *grid_at(grid, i, j));
+			else if (*grid_at(grid, i, j) < 100000)
+				printw("%d ", *grid_at(grid, i, j));
+			else if (*grid_at(grid, i, j) < 1000000)
+				printw("%d", *grid_at(grid, i, j));
 			move(y + 2, x);
 			printw("      ");
-			attroff(COLOR_PAIR(get_correct_color(grid[i][j])));
+			attroff(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))));
 			j++;
 		}
 		i++;
@@ -93,71 +96,71 @@ void print_grid(int grid[GRID_SIZE][GRID_SIZE])
 	refresh();
 }
 
-void init_grid(int (*grid)[GRID_SIZE][GRID_SIZE])
+void init_grid(t_grid *grid)
 {
-	memset((*grid), 0, sizeof(int) * GRID_SIZE * GRID_SIZE);
+	memset(grid->data, 0, sizeof(int) * grid->size * grid->size);
 	srand(time(NULL));
-	// (*grid)[0][0] = 512;
-	// (*grid)[0][1] = 1024;
-	// (*grid)[0][2] = 2048;
-	// (*grid)[0][3] = 4096;
-	// (*grid)[1][0] = 8192;
-	// (*grid)[1][1] = 16384;
-	// (*grid)[1][2] = 32768;
-	// (*grid)[1][3] = 65536;
-	// (*grid)[2][0] = 131072;
-	// (*grid)[2][1] = 262144;
-	int i = rand() % GRID_SIZE;
-	int j = rand() % GRID_SIZE;
-	(*grid)[i][j] = 2;
+	// *grid_at(grid, 0, 0) = 512;
+	// *grid_at(grid, 0, 1) = 1024;
+	// *grid_at(grid, 0, 2) = 2048;
+	// *grid_at(grid, 0, 3) = 4096;
+	// *grid_at(grid, 1, 0) = 8192;
+	// *grid_at(grid, 1, 1) = 16384;
+	// *grid_at(grid, 1, 2) = 32768;
+	// *grid_at(grid, 1, 3) = 65536;
+	// *grid_at(grid, 2, 0) = 131072;
+	// *grid_at(grid, 2, 1) = 262144;
+	int i = rand() % grid->size;
+	int j = rand() % grid->size;
+	*grid_at(grid, i, j) = 2;
 	while (1)
 	{
-		i = rand() % GRID_SIZE;
-		j = rand() % GRID_SIZE;
-		if ((*grid)[i][j] == 0)
+		i = rand() % grid->size;
+		j = rand() % grid->size;
+		if (*grid_at(grid, i, j) == 0)
 		{
 			if (rand() % 10 < 9)
-				(*grid)[i][j] = 2;
+				*grid_at(grid, i, j) = 2;
 			else
-				(*grid)[i][j] = 4;
+				*grid_at(grid, i, j) = 4;
 			break;
 		}
 	}
 }
 
-void spawn_new_number(int grid[GRID_SIZE][GRID_SIZE])
+void spawn_new_number(t_grid *grid)
 {
 	int i;
 	int j;
 	while (1)
 	{
-		i = rand() % GRID_SIZE;
-		j = rand() % GRID_SIZE;
-		if (grid[i][j] == 0)
+		i = rand() % grid->size;
+		j = rand() % grid->size;
+		if (*grid_at(grid, i, j) == 0)
 		{
 			if (rand() % 10 < 9)
-				grid[i][j] = 2;
+				*grid_at(grid, i, j) = 2;
 			else
-				grid[i][j] = 4;
+				*grid_at(grid, i, j) = 4;
 			break;
 		}
 	}
 }
 
-int left_merge(int grid[GRID_SIZE][GRID_SIZE])
+int left_merge(t_grid *grid)
 {
 	int i = 0;
 	int j;
 	int merged = 0;
-	while (i < GRID_SIZE)
+	while (i < grid->size)
 	{
 		j = 0;
-		while (j + 1 < GRID_SIZE)
+		while (j + 1 < grid->size)
 		{
-			if (grid[i][j] != 0 && grid[i][j] == grid[i][j + 1])
+			if (*grid_at(grid, i, j) != 0 && *grid_at(grid, i, j) == *grid_at(grid, i, j + 1))
 			{
-				grid[i][j] = grid[i][j] + grid[i][j + 1];
-				grid[i][j + 1] = 0;
+				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i, j + 1);
+				*grid_at(grid, i, j + 1) = 0;
 				merged = 1;
 			}
 			j++;
@@ -167,24 +170,24 @@ int left_merge(int grid[GRID_SIZE][GRID_SIZE])
 	return (merged);
 }
 
-int move_left(int grid[GRID_SIZE][GRID_SIZE])
+int move_left(t_grid *grid)
 {
 	int i = 0;
 	int j;
 	int l;
 	int moved = 0;
-	while (i < GRID_SIZE)
+	while (i < grid->size)
 	{
 		j = 1;
-		while (j < GRID_SIZE)
+		while (j < grid->size)
 		{
-			if (grid[i][j] != 0)
+			if (*grid_at(grid, i, j) != 0)
 			{
 				l = j;
-				while (l > 0 && grid[i][l - 1] == 0)
+				while (l > 0 && *grid_at(grid, i, l - 1) == 0)
 				{
-					grid[i][l - 1] = grid[i][l];
-					grid[i][l] = 0;
+					*grid_at(grid, i, l - 1) = *grid_at(grid, i, l);
+					*grid_at(grid, i, l) = 0;
 					l--;
 					moved = 1;
 				}
@@ -196,20 +199,20 @@ int move_left(int grid[GRID_SIZE][GRID_SIZE])
 	return (moved);
 }
 
-int right_merge(int grid[GRID_SIZE][GRID_SIZE])
+int right_merge(t_grid *grid)
 {
 	int i = 0;
 	int j;
 	int merged = 0;
-	while (i < GRID_SIZE)
+	while (i < grid->size)
 	{
-		j = GRID_SIZE - 1;
+		j = grid->size - 1;
 		while (j - 1 >= 0)
 		{
-			if (grid[i][j] != 0 && grid[i][j] == grid[i][j - 1])
+			if (*grid_at(grid, i, j) != 0 && *grid_at(grid, i, j) == *grid_at(grid, i, j - 1))
 			{
-				grid[i][j] = grid[i][j] + grid[i][j - 1];
-				grid[i][j - 1] = 0;
+				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i, j - 1);
+				*grid_at(grid, i, j - 1) = 0;
 				merged = 1;
 			}
 			j--;
@@ -219,24 +222,24 @@ int right_merge(int grid[GRID_SIZE][GRID_SIZE])
 	return (merged);
 }
 
-int move_right(int grid[GRID_SIZE][GRID_SIZE])
+int move_right(t_grid *grid)
 {
 	int i = 0;
 	int j;
 	int l;
 	int moved = 0;
-	while (i < GRID_SIZE)
+	while (i < grid->size)
 	{
-		j = GRID_SIZE - 2;
+		j = grid->size - 2;
 		while (j >= 0)
 		{
-			if (grid[i][j] != 0)
+			if (*grid_at(grid, i, j) != 0)
 			{
 				l = j;
-				while (l < GRID_SIZE - 1 && grid[i][l + 1] == 0)
+				while (l < grid->size - 1 && *grid_at(grid, i, l + 1) == 0)
 				{
-					grid[i][l + 1] = grid[i][l];
-					grid[i][l] = 0;
+					*grid_at(grid, i, l + 1) = *grid_at(grid, i, l);
+					*grid_at(grid, i, l) = 0;
 					l++;
 					moved = 1;
 				}
@@ -248,20 +251,20 @@ int move_right(int grid[GRID_SIZE][GRID_SIZE])
 	return (moved);
 }
 
-int up_merge(int grid[GRID_SIZE][GRID_SIZE])
+int up_merge(t_grid *grid)
 {
 	int j = 0;
 	int i;
 	int merged = 0;
-	while (j < GRID_SIZE)
+	while (j < grid->size)
 	{
 		i = 0;
-		while (i + 1 < GRID_SIZE)
+		while (i + 1 < grid->size)
 		{
-			if (grid[i][j] != 0 && grid[i][j] == grid[i + 1][j])
+			if (*grid_at(grid, i, j) != 0 && *grid_at(grid, i, j) == *grid_at(grid, i + 1, j))
 			{
-				grid[i][j] = grid[i][j] + grid[i + 1][j];
-				grid[i + 1][j] = 0;
+				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i + 1, j);
+				*grid_at(grid, i + 1, j) = 0;
 				merged = 1;
 			}
 			i++;
@@ -271,24 +274,24 @@ int up_merge(int grid[GRID_SIZE][GRID_SIZE])
 	return (merged);
 }
 
-int move_up(int grid[GRID_SIZE][GRID_SIZE])
+int move_up(t_grid *grid)
 {
 	int j = 0;
 	int i;
 	int l;
 	int moved = 0;
-	while (j < GRID_SIZE)
+	while (j < grid->size)
 	{
 		i = 1;
-		while (i < GRID_SIZE)
+		while (i < grid->size)
 		{
-			if (grid[i][j] != 0)
+			if (*grid_at(grid, i, j) != 0)
 			{
 				l = i;
-				while (l > 0 && grid[l - 1][j] == 0)
+				while (l > 0 && *grid_at(grid, l - 1, j) == 0)
 				{
-					grid[l - 1][j] = grid[l][j];
-					grid[l][j] = 0;
+					*grid_at(grid, l - 1, j) = *grid_at(grid, l, j);
+					*grid_at(grid, l, j) = 0;
 					l--;
 					moved = 1;
 				}
@@ -300,20 +303,20 @@ int move_up(int grid[GRID_SIZE][GRID_SIZE])
 	return (moved);
 }
 
-int down_merge(int grid[GRID_SIZE][GRID_SIZE])
+int down_merge(t_grid *grid)
 {
 	int j = 0;
 	int i;
 	int merged = 0;
-	while (j < GRID_SIZE)
+	while (j < grid->size)
 	{
-		i = GRID_SIZE - 1;
+		i = grid->size - 1;
 		while (i - 1 >= 0)
 		{
-			if (grid[i][j] != 0 && grid[i][j] == grid[i - 1][j])
+			if (*grid_at(grid, i, j) != 0 && *grid_at(grid, i, j) == *grid_at(grid, i - 1, j))
 			{
-				grid[i][j] = grid[i][j] + grid[i - 1][j];
-				grid[i - 1][j] = 0;
+				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i - 1, j);
+				*grid_at(grid, i - 1, j) = 0;
 				merged = 1;
 			}
 			i--;
@@ -323,24 +326,24 @@ int down_merge(int grid[GRID_SIZE][GRID_SIZE])
 	return (merged);
 }
 
-int move_down(int grid[GRID_SIZE][GRID_SIZE])
+int move_down(t_grid *grid)
 {
 	int j = 0;
 	int i;
 	int l;
 	int moved = 0;
-	while (j < GRID_SIZE)
+	while (j < grid->size)
 	{
-		i = GRID_SIZE - 2;
+		i = grid->size - 2;
 		while (i >= 0)
 		{
-			if (grid[i][j] != 0)
+			if (*grid_at(grid, i, j) != 0)
 			{
 				l = i;
-				while (l < GRID_SIZE - 1 && grid[l + 1][j] == 0)
+				while (l < grid->size - 1 && *grid_at(grid, l + 1, j) == 0)
 				{
-					grid[l + 1][j] = grid[l][j];
-					grid[l][j] = 0;
+					*grid_at(grid, l + 1, j) = *grid_at(grid, l, j);
+					*grid_at(grid, l, j) = 0;
 					l++;
 					moved = 1;
 				}
@@ -352,20 +355,20 @@ int move_down(int grid[GRID_SIZE][GRID_SIZE])
 	return (moved);
 }
 
-int validate_if_lost(int grid[GRID_SIZE][GRID_SIZE])
+int validate_if_lost(t_grid *grid)
 {
 	int i = 0;
 	int j;
-	while (i < GRID_SIZE)
+	while (i < grid->size)
 	{
 		j = 0;
-		while (j < GRID_SIZE)
+		while (j < grid->size)
 		{
-			if (grid[i][j] == 0)
+			if (*grid_at(grid, i, j) == 0)
 				return (1);
-			if (i + 1 < GRID_SIZE && grid[i][j] == grid[i + 1][j])
+			if (i + 1 < grid->size && *grid_at(grid, i, j) == *grid_at(grid, i + 1, j))
 				return (1);
-			if (j + 1 < GRID_SIZE && grid[i][j] == grid[i][j + 1])
+			if (j + 1 < grid->size && *grid_at(grid, i, j) == *grid_at(grid, i, j + 1))
 				return (1);
 			j++;
 		}
@@ -374,61 +377,52 @@ int validate_if_lost(int grid[GRID_SIZE][GRID_SIZE])
 	return (0);
 }
 
-int validate_move(int grid[GRID_SIZE][GRID_SIZE], int input)
+int validate_move(t_grid *grid, int input)
 {
-	int tmp_grid[GRID_SIZE][GRID_SIZE];
-	int i = 0;
-	int j;
-	while (i < GRID_SIZE)
-	{
-		j = 0;
-		while (j < GRID_SIZE)
-		{
-			tmp_grid[i][j] = grid[i][j];
-			j++;
-		}
-		i++;
-	}
+	int tmp_grid_data[grid->size][grid->size];
+	t_grid tmp_grid = {(int *)tmp_grid_data, grid->size};
+	ft_memcpy(tmp_grid.data, grid->data, grid->size * grid->size * sizeof(*grid->data));
+
 	if (input == KEY_UP)
 	{
-		if (move_up(tmp_grid) == 1)
+		if (move_up(&tmp_grid) == 1)
 			return (1);
-		if (up_merge(tmp_grid) == 1)
+		if (up_merge(&tmp_grid) == 1)
 			return (1);
-		if (move_up(tmp_grid) == 1)
+		if (move_up(&tmp_grid) == 1)
 			return (1);
 	}
 	else if (input == KEY_DOWN)
 	{
-		if (move_down(tmp_grid) == 1)
+		if (move_down(&tmp_grid) == 1)
 			return (1);
-		if (down_merge(tmp_grid) == 1)
+		if (down_merge(&tmp_grid) == 1)
 			return (1);
-		if (move_down(tmp_grid) == 1)
+		if (move_down(&tmp_grid) == 1)
 			return (1);
 	}
 	else if (input == KEY_LEFT)
 	{
-		if (move_left(tmp_grid) == 1)
+		if (move_left(&tmp_grid) == 1)
 			return (1);
-		if (left_merge(tmp_grid) == 1)
+		if (left_merge(&tmp_grid) == 1)
 			return (1);
-		if (move_left(tmp_grid) == 1)
+		if (move_left(&tmp_grid) == 1)
 			return (1);
 	}
 	else if (input == KEY_RIGHT)
 	{
-		if (move_right(tmp_grid) == 1)
+		if (move_right(&tmp_grid) == 1)
 			return (1);
-		if (right_merge(tmp_grid) == 1)
+		if (right_merge(&tmp_grid) == 1)
 			return (1);
-		if (move_right(tmp_grid) == 1)
+		if (move_right(&tmp_grid) == 1)
 			return (1);
 	}
 	return (0);
 }
 
-bool is_win_condition(int grid[GRID_SIZE][GRID_SIZE])
+bool is_win_condition(t_grid *grid)
 {
 	int i = 0;
 	int j;
@@ -436,12 +430,12 @@ bool is_win_condition(int grid[GRID_SIZE][GRID_SIZE])
 
 	if (win)
 		return (false);
-	while (i < GRID_SIZE)
+	while (i < grid->size)
 	{
 		j = 0;
-		while (j < GRID_SIZE)
+		while (j < grid->size)
 		{
-			if (grid[i][j] == 16)
+			if (*grid_at(grid, i, j) == 16)
 			{
 				win = true;
 				return (true);
@@ -466,7 +460,7 @@ bool display_win(void)
 	return (true);
 }
 
-void game_loop(int grid[GRID_SIZE][GRID_SIZE])
+void game_loop(t_grid *grid)
 {
 	int input;
 
@@ -607,11 +601,15 @@ void init_ncurses(void)
 
 int main(void)
 {
-	int grid[GRID_SIZE][GRID_SIZE];
+	int grid_size;
+
+	grid_size = 4;
+	int grid_data[grid_size][grid_size];
+	t_grid grid = {(int *)grid_data, grid_size};
 
 	init_ncurses();
 	init_grid(&grid);
-	print_grid(grid);
-	game_loop(grid);
+	print_grid(&grid);
+	game_loop(&grid);
 	endwin();
 }
