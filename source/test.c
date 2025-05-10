@@ -453,17 +453,17 @@ bool is_win_condition(t_grid *grid)
 	return (false);
 }
 
-bool display_win(void)
+bool display_win(t_grid *grid)
 {
-	// int input;
-	//wprintw(grid->grid_win, "\n\n        YOU WON");
-	//wprintw(grid->grid_win, "\nDo you want to continue? (y/n)");
-	/* while (1)
-	{
-		input = getch();
-		if
-	} */
+	switch (popup_menu("You win!", (const char *[]){"Continue", "Quit", NULL}, grid)) {
+	case 0:
+		print_grid(grid);
 		return (true);
+	case 1:
+		return (false);
+	default:
+		return (false);
+	}
 }
 
 bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
@@ -566,7 +566,8 @@ void game_loop(t_grid *grid)
 		if (is_win_condition(grid))
 		{
 			print_grid(grid);
-			display_win();
+			if (!display_win(grid))
+				return;
 		}
 		else 
 		{
