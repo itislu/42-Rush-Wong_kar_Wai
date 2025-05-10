@@ -488,7 +488,7 @@ void game_loop(t_grid *grid)
 				printw("SMALL: y: %d x: %d", y, x);
 				input = getch();
 				if (input == 'q' || input == ESCAPE)
-					break;
+					return;
 				getmaxyx(stdscr, y, x);
 			}
 			print_grid(grid);
