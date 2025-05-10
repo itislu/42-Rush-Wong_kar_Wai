@@ -98,7 +98,7 @@ void print_grid(t_grid *grid)
 
 void init_grid(t_grid *grid)
 {
-	memset(grid->data, 0, sizeof(int) * grid->size * grid->size);
+	ft_memset(grid->data, 0, sizeof(int) * grid->size * grid->size);
 	srand(time(NULL));
 	// *grid_at(grid, 0, 0) = 512;
 	// *grid_at(grid, 0, 1) = 1024;
