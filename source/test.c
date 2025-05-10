@@ -489,14 +489,14 @@ void game_loop(int grid[GRID_SIZE][GRID_SIZE])
 				clear();
 				printw("SMALL: y: %d x: %d", y, x);
 				input = getch();
-				if (input == 'q' || input == 27)
+				if (input == 'q' || input == ESCAPE)
 					break;
 				getmaxyx(stdscr, y, x);
 			}
 			print_grid(grid);
 			continue;
 		}
-		if (input != 'i' && input != 'k' && input != 'j' && input != 'l' && input != 'q' && input != 27
+		if (input != 'i' && input != 'k' && input != 'j' && input != 'l' && input != 'q' && input != ESCAPE
 			&& input != 'w' && input != 's' && input != 'a' && input != 'd'
 			&& input != KEY_UP && input != KEY_DOWN && input != KEY_LEFT && input != KEY_RIGHT)
 		{
@@ -534,7 +534,7 @@ void game_loop(int grid[GRID_SIZE][GRID_SIZE])
 			right_merge(grid);
 			move_right(grid);
 		}
-		else if (input == 'q' || input == 27)
+		else if (input == 'q' || input == ESCAPE)
 		{
 			break;
 		}

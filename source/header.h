@@ -26,6 +26,8 @@
 #define COLOR_65536 18
 #define COLOR_131072 19
 
+#define ESCAPE 27
+
 enum e_const
 {
 	WIN_VALUE = 2048
