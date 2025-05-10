@@ -47,20 +47,23 @@ int popup_menu(const char *title, const char *options[])
 			switch (getch()) {
 			case KEY_DOWN:
 				cur_option = ft_min(cur_option + 1, option_amount - 1);
-				goto end;
+				goto inner_end;
 			case KEY_UP:
 				cur_option = ft_max(cur_option - 1, 0);
-				goto end;
+				goto inner_end;
 			case '\n':
 			case KEY_RIGHT:
-				return cur_option;
+				goto outer_end;
 			case 'q':
 			case ESCAPE:
-				return -1;
+				cur_option = -1;
+				goto outer_end;
 			}
 		}
-	end:;
+	inner_end:;
 	}
+outer_end:
 
 	delwin(win);
+	return cur_option;
 }
