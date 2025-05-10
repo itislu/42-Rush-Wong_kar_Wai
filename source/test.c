@@ -1,44 +1,52 @@
 #include "header.h"
+#include <ncurses.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 int sig = 0;
 
 int	get_correct_color(int num)
 {
-	if (num == 2)
+	switch (num) {
+	case 2:
 		return (COLOR_2);
-	else if (num == 4)
+	case 4:
 		return (COLOR_4);
-	else if (num == 8)
+	case 8:
 		return (COLOR_8);
-	else if (num == 16)
+	case 16:
 		return (COLOR_16);
-	else if (num == 32)
+	case 32:
 		return (COLOR_32);
-	else if (num == 64)
+	case 64:
 		return (COLOR_64);
-	else if (num == 128)
+	case 128:
 		return (COLOR_128);
-	else if (num == 256)
+	case 256:
 		return (COLOR_256);
-	else if (num == 512)
+	case 512:
 		return (COLOR_512);
-	else if (num == 1024)
+	case 1024:
 		return (COLOR_1024);
-	else if (num == 2048)
+	case 2048:
 		return (COLOR_2048);
-	else if (num == 4096)
+	case 4096:
 		return (COLOR_4096);
-	else if (num == 8192)
+	case 8192:
 		return (COLOR_8192);
-	else if (num == 16384)
+	case 16384:
 		return (COLOR_16384);
-	else if (num == 32768)
+	case 32768:
 		return (COLOR_32768);
-	else if (num == 65536)
+	case 65536:
 		return (COLOR_65536);
-	else if (num == 131072)
+	case 131072:
 		return (COLOR_131072);
-	return (0);
+	default:
+		return (0);
+	}
 }
 
 void print_grid(int grid[GRID_SIZE][GRID_SIZE])
@@ -445,7 +453,7 @@ bool is_win_condition(int grid[GRID_SIZE][GRID_SIZE])
 	return (false);
 }
 
-bool display_win()
+bool display_win(void)
 {
 	// int input;
 	printw("\n\n        YOU WON");
@@ -550,7 +558,7 @@ short rgb_to_ncurses(int rgb)
 	return (rgb * 1000 / 255);
 }
 
-void init_ncurses()
+void init_ncurses(void)
 {
 	initscr();
 	noecho();
@@ -597,7 +605,7 @@ void init_ncurses()
 	init_pair(COLOR_131072, COLOR_WHITE, COLOR_131072);
 }
 
-int main()
+int main(void)
 {
 	int grid[GRID_SIZE][GRID_SIZE];
 
