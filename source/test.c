@@ -48,7 +48,7 @@ int	get_correct_color(int num)
 	case 131072:
 		return (COLOR_131072);
 	default:
-		return (0);
+		return (COLOR_EMPTY);
 	}
 }
 
@@ -590,6 +590,7 @@ void init_ncurses(void)
 	curs_set(FALSE);
 	start_color();
 	use_default_colors();
+	init_color(COLOR_EMPTY, rgb_to_ncurses(189), rgb_to_ncurses(172), rgb_to_ncurses(151));
 	init_color(COLOR_WHITE, rgb_to_ncurses(255), rgb_to_ncurses(255), rgb_to_ncurses(255));
 	init_color(COLOR_DARK, rgb_to_ncurses(117),rgb_to_ncurses(100),rgb_to_ncurses(82));
 	init_color(COLOR_2, rgb_to_ncurses(238),rgb_to_ncurses(228),rgb_to_ncurses(219));

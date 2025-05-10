@@ -24,6 +24,7 @@ enum e_colors
 	COLOR_65536,
 	COLOR_131072,
 	COLOR_DARK,
+	COLOR_EMPTY,
 };
 
 #define ESCAPE 27
