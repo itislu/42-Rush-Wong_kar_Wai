@@ -52,7 +52,6 @@ int popup_menu(const char *title, const char *options[])
 				cur_option = ft_max(cur_option - 1, 0);
 				goto inner_end;
 			case '\n':
-			case KEY_RIGHT:
 				goto outer_end;
 			case 'q':
 			case ESCAPE:
