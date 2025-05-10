@@ -52,12 +52,21 @@ int	get_correct_color(int num)
 	}
 }
 
+void print_score(t_grid *grid)
+{
+	box(grid->score_win, 0, 0);
+	mvwprintw(grid->score_win, 1, 1, "Score: %d", grid->score);
+	wrefresh(grid->score_win);
+}
+
 void print_grid(t_grid *grid)
 {
 	int i = 0;
 	int j;
-	move(0, 0);
 	clear();
+	print_score(grid);
+	wmove(grid->grid_win, 0, 0);
+	box(grid->grid_win, 0, 0);
 	while (i < grid->size)
 	{
 		j = 0;
@@ -68,21 +77,23 @@ void print_grid(t_grid *grid)
 		// 		j++;
 		// 		continue;
 		// 	}
-			attron(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD);
-			int y = i * grid->box_height;
-			int x = j * grid->box_width;
-			move(y, x);
+			//attron(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD);
+			wattr_on(grid->grid_win, COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD, 0);
+			int y = i * grid->box_height + 1;
+			int x = j * grid->box_width + 2;
+			wmove(grid->grid_win, y, x);
 			for(int i = 0; i < grid->box_height; i++)
-				mvprintw(y + i, x, "%*c", grid->box_width, ' ');
-			move(y + grid->box_height / 2, x + ((grid->box_width - ft_nbrlen_base(*grid_at(grid, i, j), 10)) / 2));
-			printw("%d", *grid_at(grid, i, j));
-			attroff(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))));
-			move (y + grid->box_height, x); 
+				mvwprintw(grid->grid_win, y + i, x, "%*c", grid->box_width, ' ');
+			wmove(grid->grid_win, y + grid->box_height / 2, x + ((grid->box_width - ft_nbrlen_base(*grid_at(grid, i, j), 10)) / 2));
+			wprintw(grid->grid_win, "%d", *grid_at(grid, i, j));
+			//attroff(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))));
+			wattr_off(grid->grid_win, COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))), 0);
+			wmove(grid->grid_win, y + grid->box_height, x); 
 			j++;
 		}
 		i++;
 	}
-	refresh();
+	wrefresh(grid->grid_win);
 }
 
 void init_grid(t_grid *grid)
@@ -150,6 +161,7 @@ int left_merge(t_grid *grid)
 			{
 				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i, j + 1);
 				*grid_at(grid, i, j + 1) = 0;
+				grid->score += *grid_at(grid, i, j);
 				merged = 1;
 			}
 			j++;
@@ -202,6 +214,7 @@ int right_merge(t_grid *grid)
 			{
 				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i, j - 1);
 				*grid_at(grid, i, j - 1) = 0;
+				grid->score += *grid_at(grid, i, j);
 				merged = 1;
 			}
 			j--;
@@ -254,6 +267,7 @@ int up_merge(t_grid *grid)
 			{
 				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i + 1, j);
 				*grid_at(grid, i + 1, j) = 0;
+				grid->score += *grid_at(grid, i, j);
 				merged = 1;
 			}
 			i++;
@@ -306,6 +320,7 @@ int down_merge(t_grid *grid)
 			{
 				*grid_at(grid, i, j) = *grid_at(grid, i, j) + *grid_at(grid, i - 1, j);
 				*grid_at(grid, i - 1, j) = 0;
+				grid->score += *grid_at(grid, i, j);
 				merged = 1;
 			}
 			i--;
@@ -439,8 +454,8 @@ bool is_win_condition(t_grid *grid)
 bool display_win(void)
 {
 	// int input;
-	printw("\n\n        YOU WON");
-	printw("\nDo you want to continue? (y/n)");
+	//wprintw(grid->grid_win, "\n\n        YOU WON");
+	//wprintw(grid->grid_win, "\nDo you want to continue? (y/n)");
 	/* while (1)
 	{
 		input = getch();
@@ -457,11 +472,11 @@ void game_loop(t_grid *grid)
 	{
 		if (validate_if_lost(grid) == 0)
 		{
-			printw("\nGame Over\n");
-			getch();
+			wprintw(grid->grid_win, "\nGame Over\n");
+			wgetch(grid->grid_win);
 			break;
 		}
-		input = getch();
+		input = wgetch(grid->grid_win);
 		if (input == KEY_RESIZE)
 		{
 			int y;
@@ -531,8 +546,9 @@ void game_loop(t_grid *grid)
 		else 
 		{
 			spawn_new_number(grid);
-		print_grid(grid);
+			print_grid(grid);
 		}
+		wrefresh(grid->grid_win);
 	}
 }
 
@@ -587,6 +603,18 @@ void init_ncurses(void)
 	init_color(COLOR_131072, rgb_to_ncurses(237),rgb_to_ncurses(160),rgb_to_ncurses(0));
 	init_pair(COLOR_131072, COLOR_WHITE, COLOR_131072);
 }
+WINDOW *create_win(int size_y, int size_x , int pos_y, int pox_x)
+{
+	WINDOW *win = newwin(size_y, size_x, pos_y, pox_x);
+	keypad(win, TRUE);
+	return (win);
+}
+
+void init_windows(t_grid *grid)
+{
+	grid->grid_win = create_win(grid->box_height * grid->size + 2, grid->box_width * grid->size + 4, 3, 0);
+	grid->score_win = create_win(3, grid->box_width * grid->size + 4, 0, 0);
+}
 
 int main(void)
 {
@@ -605,10 +633,12 @@ int main(void)
 		grid.box_height = 5;
 		grid.box_width = 10;
 	}
-	
 	init_ncurses();
+	init_windows(&grid);
 	init_grid(&grid);
 	print_grid(&grid);
 	game_loop(&grid);
+	delwin(grid.grid_win);
+	delwin(grid.score_win);
 	endwin();
 }
