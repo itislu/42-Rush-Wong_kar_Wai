@@ -89,12 +89,12 @@ bool init_windows(t_grid *grid)
 	
 	grid->score_win = create_win(grid->score_win_height, grid->score_win_width, grid->score_win_pos_y, grid->score_win_pos_x);
 	if (!grid->score_win) {
-		return false;
+		return true;
 	}
 	grid->grid_win = create_win(grid->grid_win_height, grid->grid_win_width, grid->grid_win_pos_y, grid->grid_win_pos_x);
 	if (!grid->grid_win) {
 		delwin(grid->score_win);
-		return false;
+		return true;
 	}
 	if (grid->scoreboard->amount > 0)
 	{
@@ -102,7 +102,7 @@ bool init_windows(t_grid *grid)
 		if (!grid->scoreboard->win) {
 			delwin(grid->score_win);
 			delwin(grid->grid_win);
-			return false;
+			return true;
 		}
 	}
 	return true;
