@@ -48,7 +48,9 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 		box(win, 0, 0);
 		keypad(win, true);
 	
+		wattron(win, A_BOLD);
 		mvwprintw(win, 0, (width - title_len - 2 /*spaces*/) / 2, " %s ", title);
+		wattroff(win, A_BOLD);
 		for (int i = 0; i < option_amount; i++) {
 			if (i == cur_option) {
 				wattron(win, A_REVERSE);
