@@ -136,6 +136,7 @@ void print_grid(t_grid *grid)
 		}
 		i++;
 	}
+	wrefresh(grid->score_win);
 	wrefresh(grid->grid_win);
 }
 
@@ -524,18 +525,10 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 	clear();
 	if (grid)
 	{
-		werase(grid->grid_win);
-		werase(grid->score_win);
-		touchwin(grid->score_win);
-		touchwin(grid->grid_win);
 		refresh();
-		wrefresh(grid->score_win);
-		wrefresh(grid->grid_win);
 		delwin(grid->grid_win);
 		delwin(grid->score_win);
 		init_windows(grid);
-		wrefresh(grid->score_win);
-		wrefresh(grid->grid_win);
 		print_grid(grid);
 	}
 	return true;
