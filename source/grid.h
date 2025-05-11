@@ -1,6 +1,7 @@
 #ifndef GRID_H
 #define GRID_H
 
+#include "scoreboard.h"
 #include <ncurses.h>
 
 typedef struct s_grid
@@ -17,6 +18,7 @@ typedef struct s_grid
 	int height_extra;
 	int width_extra;
 	int win_value;
+	t_scoreboard *scoreboard;
 } t_grid;
 
 int *grid_at(t_grid *grid, int row, int col);

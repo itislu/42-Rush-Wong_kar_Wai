@@ -729,6 +729,14 @@ void validate_win_value(t_grid *grid)
 
 int main(void)
 {
+	t_scoreboard scoreboard;
+	// read score file
+
+	// for testing
+	t_score scores[4] = {{12345678}, {123}, {8}, {0}};
+	scoreboard.scores = (t_score *)&scores;
+	scoreboard.amount = 4;
+
 	init_ncurses();
 	while (1)
 	{
