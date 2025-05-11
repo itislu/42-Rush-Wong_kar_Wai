@@ -156,17 +156,9 @@ int main(void)
 	}
 	while (1)
 	{
-		if (!read_scorefile(&scoreboard)) {
-			break;
-		}
-		if (scoreboard.amount > 0)
-			scoreboard.win_width = ft_max(ft_nbrlen_base(scoreboard.scores[0].score, 10) + 5 /*rank*/, 12 /*title*/) + 2 /*frame*/;
-	
 		t_grid grid = {.height_extra = 3 /*score*/ + 2 /*frame*/,
 		               .width_extra = 4 /*frame*/};
 		grid.scoreboard = &scoreboard;
-		if (scoreboard.amount > 0)
-			grid.width_extra += 1 /*spacing*/ + scoreboard.win_width;
 
 		switch (popup_menu("Choose a grid size", (const char *[]){"4x4", "5x5", NULL}, NULL)) {
 		case 0:
@@ -180,6 +172,15 @@ int main(void)
 		default:
 			goto end;
 		}
+		if (!read_scorefile(&scoreboard, grid.size)) {
+			break;
+		}
+		if (scoreboard.amount > 0)
+		{
+			scoreboard.win_width = ft_max(ft_nbrlen_base(scoreboard.scores[0].score, 10) + 5 /*rank*/, 12 /*title*/) + 2 /*frame*/;
+			grid.width_extra += 1 /*spacing*/ + scoreboard.win_width;
+		}
+	
 		validate_win_value(&grid);
 		int grid_data[grid.size][grid.size];
 		grid.data = (int *)grid_data;
@@ -189,7 +190,7 @@ int main(void)
 		init_windows(&grid);
 		init_grid(&grid);
 		bool restart = game_loop(&grid);
-		save_score(grid.score);
+		save_score(grid.score, grid.size);
 		delwin(grid.grid_win);
 		delwin(grid.score_win);
 		delwin(grid.scoreboard->win);

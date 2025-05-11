@@ -30,9 +30,9 @@ static bool is_valid_score(const char *line)
 }
 
 // TODO Print errors
-bool read_scorefile(t_scoreboard *scoreboard)
+bool read_scorefile(t_scoreboard *scoreboard, int mode)
 {
-	int fd = open(SCORE_FILE, O_RDONLY);
+	int fd = open(mode == 4 ? SCORE_FILE_4x4 : SCORE_FILE_5x5, O_RDONLY);
 	if (fd == -1) {
 		return true;
 	}
@@ -76,9 +76,9 @@ bool read_scorefile(t_scoreboard *scoreboard)
 	return true;
 }
 
-bool save_score(long score)
+bool save_score(long score, int mode)
 {
-	int fd = open(SCORE_FILE,
+	int fd = open(mode == 4 ? SCORE_FILE_4x4 : SCORE_FILE_5x5,
 	              O_CREAT | O_WRONLY | O_APPEND,
 	              (S_IRUSR + S_IWUSR) | S_IRGRP | S_IROTH);
 	if (fd == -1) {

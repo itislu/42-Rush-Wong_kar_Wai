@@ -3,7 +3,8 @@
 
 # include <ncurses.h>
 
-# define SCORE_FILE "./scores"
+# define SCORE_FILE_4x4 "./scores_4x4"
+# define SCORE_FILE_5x5 "./scores_5x5"
 
 typedef struct s_score 
 {
@@ -19,7 +20,7 @@ typedef struct s_scoreboard
 	int win_width;
 } t_scoreboard;
 
-bool read_scorefile(t_scoreboard *scoreboard);
-bool save_score(long score);
+bool read_scorefile(t_scoreboard *scoreboard, int mode);
+bool save_score(long score, int mode);
 
 #endif
