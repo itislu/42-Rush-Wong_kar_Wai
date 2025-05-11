@@ -769,17 +769,15 @@ void validate_win_value(t_grid *grid)
 int main(void)
 {
 	t_scoreboard scoreboard = {0};
-	// read score file
-	if (!read_scorefile(&scoreboard)) {
-		return 1;
-	}
-
-	if (scoreboard.amount > 0)
-		scoreboard.win_width = ft_max(ft_nbrlen_base(scoreboard.scores[0].score, 10) + 5 /*rank*/, 12 /*title*/) + 2 /*frame*/;
-
 	init_ncurses();
 	while (1)
 	{
+		if (!read_scorefile(&scoreboard)) {
+			break;
+		}
+		if (scoreboard.amount > 0)
+			scoreboard.win_width = ft_max(ft_nbrlen_base(scoreboard.scores[0].score, 10) + 5 /*rank*/, 12 /*title*/) + 2 /*frame*/;
+	
 		t_grid grid = {.height_extra = 3 /*score*/ + 2 /*frame*/,
 		               .width_extra = 4 /*frame*/};
 		grid.scoreboard = &scoreboard;
@@ -807,12 +805,15 @@ int main(void)
 		init_windows(&grid);
 		init_grid(&grid);
 		bool restart = game_loop(&grid);
+		save_score(grid.score);
 		delwin(grid.grid_win);
 		delwin(grid.score_win);
+		ft_free_and_null((void **)&scoreboard.scores);
 		if (restart == false)
 			break;
 	}
 end:
+	free(scoreboard.scores);
 	endwin();
 	return (0);
 }

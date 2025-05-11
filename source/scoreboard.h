@@ -20,5 +20,6 @@ typedef struct s_scoreboard
 } t_scoreboard;
 
 bool read_scorefile(t_scoreboard *scoreboard);
+bool save_score(long score);
 
 #endif
