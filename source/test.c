@@ -177,18 +177,18 @@ void init_grid(t_grid *grid)
 {
 	ft_memset(grid->data, 0, sizeof(int) * grid->size * grid->size);
 	srand(time(NULL));
-	*grid_at(grid, 0, 0) = 512;
-	*grid_at(grid, 0, 1) = 1024;
-	*grid_at(grid, 0, 2) = 2048;
-	*grid_at(grid, 0, 3) = 4096;
-	*grid_at(grid, 1, 0) = 8192;
-	*grid_at(grid, 1, 1) = 16384;
-	*grid_at(grid, 1, 2) = 32768;
-	*grid_at(grid, 1, 3) = 65536;
-	*grid_at(grid, 2, 0) = 131072;
-	*grid_at(grid, 2, 1) = 262144;
-	// spawn_new_number(grid);
-	// spawn_new_number(grid);
+	// *grid_at(grid, 0, 0) = 512;
+	// *grid_at(grid, 0, 1) = 1024;
+	// *grid_at(grid, 0, 2) = 2048;
+	// *grid_at(grid, 0, 3) = 4096;
+	// *grid_at(grid, 1, 0) = 8192;
+	// *grid_at(grid, 1, 1) = 16384;
+	// *grid_at(grid, 1, 2) = 32768;
+	// *grid_at(grid, 1, 3) = 65536;
+	// *grid_at(grid, 2, 0) = 131072;
+	// *grid_at(grid, 2, 1) = 262144;
+	spawn_new_number(grid);
+	spawn_new_number(grid);
 }
 
 int left_merge(t_grid *grid)
@@ -483,7 +483,7 @@ bool is_win_condition(t_grid *grid)
 		j = 0;
 		while (j < grid->size)
 		{
-			if (*grid_at(grid, i, j) == 8) // TODO WIN_VALUE
+			if (*grid_at(grid, i, j) == grid->win_value)
 			{
 				win = true;
 				return (true);
@@ -698,23 +698,18 @@ void init_windows(t_grid *grid)
 void validate_win_value(t_grid *grid)
 {
 	int result = 2;
-	int n = grid->size * grid->size;
-	while (n > 0)
+	int n = grid->size * grid->size + 1;
+	while (n > 0 && WIN_VALUE >= 8)
 	{
 		if (result == WIN_VALUE)
 		{
 			grid->win_value = WIN_VALUE;
-			printw("result %d == WIN_VALUE %d", result, WIN_VALUE);
-			getch();
 			return ;
 		}
 		result *= 2;
 		n--;
 	}
-	grid->win_value = 69;
-	printw("NOT VALID: %d\n", WIN_VALUE);
-	printw("grid->win_value: %d", grid->win_value);
-	getch();
+	grid->win_value = 2048;
 }
 
 int main(void)
@@ -736,7 +731,6 @@ int main(void)
 			return 0;
 		}
 		validate_win_value(&grid);
-		break;
 		int grid_data[grid.size][grid.size];
 		grid.data = (int *)grid_data;
 		if (grid.size == 4)
