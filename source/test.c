@@ -133,11 +133,6 @@ void print_grid(t_grid *grid)
 		j = 0;
 		while (j < grid->size)
 		{
-		// 	if (*grid_at(grid, i, j) == 0)
-		// 	{
-		// 		j++;
-		// 		continue;
-		// 	}
 			wattr_on(grid->grid_win, COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD, 0);
 			int y = i * grid->box_height + 1;
 			int x = j * grid->box_width + 2;
@@ -521,12 +516,33 @@ bool display_win(t_grid *grid)
 	}
 }
 
+void set_box_size(t_grid *grid)
+{
+	int y;
+	int x;
+	getmaxyx(stdscr, y, x);
+
+	int width_from_grid = (x - grid->width_extra) / grid->size;
+	int height_from_grid = (y - grid->height_extra) / grid->size;
+	if (height_from_grid % 2 == 0) {
+		height_from_grid--; // make it uneven
+	}
+
+	int height_from_width = width_from_grid / 2;
+	if (height_from_width % 2 == 0) {
+		height_from_width--; // make it uneven
+	}
+
+	grid->box_height = ft_min(height_from_grid, height_from_width);
+	grid->box_width = grid->box_height * 2;
+}
+
 bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 {
 	int y;
 	int x;
 	getmaxyx(stdscr, y, x);
-	while (y < min_height + 5 || x < min_width + 8)
+	while (y < min_height || x < min_width)
 	{
 		clear();
 		printw("SMALL: y: %d x: %d", y, x);
@@ -538,6 +554,7 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 	clear();
 	if (grid)
 	{
+		set_box_size(grid);
 		refresh();
 		delwin(grid->grid_win);
 		delwin(grid->score_win);
@@ -553,12 +570,10 @@ bool game_loop(t_grid *grid)
 
 	while (1)
 	{
-		if (!continue_if_term_size_ok(grid, grid->box_height * grid->size, grid->box_width * grid->size))
+		if (!continue_if_term_size_ok(grid, grid->min_height + grid->height_extra, grid->min_width + grid->width_extra))
 			return (false);
 		if (validate_if_lost(grid) == 0)
 		{
-			//wprintw(grid->grid_win, "\nGame Over\n");
-			//wgetch(grid->grid_win);
 			if (display_game_over(grid))
 				return (true);
 			break;
@@ -717,40 +732,36 @@ int main(void)
 	init_ncurses();
 	while (1)
 	{
-		t_grid grid = {0};
-		
+		t_grid grid = {.height_extra = 3 /*score*/ + 2 /*frame*/,
+		               .width_extra = 4 /*frame*/};
+
 		switch (popup_menu("Choose a grid size", (const char *[]){"4x4", "5x5", NULL}, NULL)) {
 		case 0:
 			grid.size = 4;
+			grid.min_height = 3 * grid.size;
 			break;
 		case 1:
 			grid.size = 5;
+			grid.min_height = 5 * grid.size;
 			break;
 		default:
-			endwin();
-			return 0;
+			goto end;
 		}
 		validate_win_value(&grid);
 		int grid_data[grid.size][grid.size];
 		grid.data = (int *)grid_data;
-		if (grid.size == 4)
-		{
-			grid.box_height = 3;
-		}
-		else
-		{
-			grid.box_height = 5;
-		}
-		grid.box_width = grid.box_height * 2;
+		grid.min_width = grid.min_height * 2;
+		set_box_size(&grid);
 
 		init_windows(&grid);
 		init_grid(&grid);
-		bool restart =  game_loop(&grid);
+		bool restart = game_loop(&grid);
 		delwin(grid.grid_win);
 		delwin(grid.score_win);
 		if (restart == false)
 			break;
 	}
+end:
 	endwin();
 	return (0);
 }

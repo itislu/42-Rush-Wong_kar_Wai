@@ -31,7 +31,7 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 		clear();
 		if (grid)
 		{
-			if (!continue_if_term_size_ok(grid, grid->box_height * grid->size, grid->box_width * grid->size))
+			if (!continue_if_term_size_ok(grid, grid->min_height + grid->height_extra, grid->min_width + grid->width_extra))
 				return -1;
 		}
 		else 

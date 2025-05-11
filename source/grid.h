@@ -12,6 +12,10 @@ typedef struct s_grid
 	int score;
 	WINDOW *grid_win;
 	WINDOW *score_win;
+	int min_height;
+	int min_width;
+	int height_extra;
+	int width_extra;
 	int win_value;
 } t_grid;
 
