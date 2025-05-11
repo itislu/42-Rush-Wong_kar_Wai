@@ -141,7 +141,8 @@ void print_grid(t_grid *grid)
 			int x = j * grid->box_width + 2;
 			for(int i = 0; i < grid->box_height; i++)
 				mvwprintw(grid->grid_win, y + i, x, "%*c", grid->box_width, ' ');
-			print_number(grid, *grid_at(grid, i, j), y, x);
+			if (*grid_at(grid, i, j) != 0)
+				print_number(grid, *grid_at(grid, i, j), y, x);
 			wattr_off(grid->grid_win, COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))), 0);
 			j++;
 		}
@@ -621,8 +622,9 @@ void init_ncurses(void)
 	curs_set(FALSE);
 	start_color();
 	use_default_colors();
-	init_color(COLOR_EMPTY, rgb_to_ncurses(189), rgb_to_ncurses(172), rgb_to_ncurses(151));
 	init_color(COLOR_WHITE, rgb_to_ncurses(255), rgb_to_ncurses(255), rgb_to_ncurses(255));
+	init_color(COLOR_EMPTY, rgb_to_ncurses(189), rgb_to_ncurses(172), rgb_to_ncurses(151));
+	init_pair(COLOR_EMPTY, COLOR_DARK, COLOR_EMPTY);
 	init_color(COLOR_DARK, rgb_to_ncurses(117),rgb_to_ncurses(100),rgb_to_ncurses(82));
 	init_color(COLOR_2, rgb_to_ncurses(238),rgb_to_ncurses(228),rgb_to_ncurses(219));
 	init_pair(COLOR_2, COLOR_DARK, COLOR_2);
