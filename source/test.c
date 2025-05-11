@@ -59,7 +59,9 @@ int	get_correct_color(int num)
 void print_score(t_grid *grid)
 {
 	box(grid->score_win, 0, 0);
-	mvwprintw(grid->score_win, 1, 1, "Score: %ld", grid->score);
+	wattron(grid->score_win, A_BOLD);
+	mvwprintw(grid->score_win, 1, 2, "Score: %ld", grid->score);
+	wattroff(grid->score_win, A_BOLD);
 	wrefresh(grid->score_win);
 }
 
