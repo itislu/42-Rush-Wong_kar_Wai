@@ -25,6 +25,7 @@ enum e_colors
 	COLOR_65536,
 	COLOR_131072,
 	COLOR_MAX,
+	COLOR_BRIGHT,
 	COLOR_DARK,
 };
 
