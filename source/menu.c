@@ -75,13 +75,17 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 		wrefresh(win);
 
 		while (true) {
-			switch (getch()) {
+			switch (ft_tolower(getch())) {
 			case KEY_RESIZE:
 				goto inner_end;
 			case KEY_DOWN:
+			case 's':
+			case 'j':
 				cur_option = ft_min(cur_option + 1, option_amount - 1);
 				goto inner_end;
 			case KEY_UP:
+			case 'w':
+			case 'k':
 				cur_option = ft_max(cur_option - 1, 0);
 				goto inner_end;
 			case '\n':

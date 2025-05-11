@@ -566,7 +566,7 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 	{
 		clear();
 		printw("SMALL: y: %d x: %d", y, x);
-		int input = getch();
+		int input = ft_tolower(getch());
 		if (input == 'q' || input == ESCAPE)
 			return false;
 		getmaxyx(stdscr, y, x);
@@ -602,18 +602,12 @@ bool game_loop(t_grid *grid)
 			break;
 		}
 
-		input = wgetch(grid->grid_win);
+		input = ft_tolower(wgetch(grid->grid_win));
 		if (input == KEY_RESIZE)
 		{
 			continue;
 		}
-		if (input != 'i' && input != 'k' && input != 'j' && input != 'l' && input != 'q' && input != ESCAPE
-			&& input != 'w' && input != 's' && input != 'a' && input != 'd'
-			&& input != KEY_UP && input != KEY_DOWN && input != KEY_LEFT && input != KEY_RIGHT)
-		{
-			continue;
-		}
-		if (input == 'i' || input == 'w' || input == KEY_UP)
+		if (input == 'k' || input == 'w' || input == KEY_UP)
 		{
 			if (validate_move(grid, KEY_UP) == 0)
 				continue;
@@ -621,7 +615,7 @@ bool game_loop(t_grid *grid)
 			up_merge(grid);
 			move_up(grid);
 		}
-		else if (input == 'k' || input == 's' || input == KEY_DOWN)
+		else if (input == 'j' || input == 's' || input == KEY_DOWN)
 		{
 			if (validate_move(grid, KEY_DOWN) == 0)
 				continue;
@@ -629,7 +623,7 @@ bool game_loop(t_grid *grid)
 			down_merge(grid);
 			move_down(grid);
 		}
-		else if (input == 'j' || input == 'a' || input == KEY_LEFT)
+		else if (input == 'h' || input == 'a' || input == KEY_LEFT)
 		{
 			if (validate_move(grid, KEY_LEFT) == 0)
 				continue;
@@ -648,6 +642,10 @@ bool game_loop(t_grid *grid)
 		else if (input == 'q' || input == ESCAPE)
 		{
 			break;
+		}
+		else 
+		{
+			continue;
 		}
 
 		if (is_win_condition(grid))
