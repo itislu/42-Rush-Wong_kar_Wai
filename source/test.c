@@ -82,27 +82,37 @@ void print_number(t_grid *grid, int nbr, int pos_y, int pos_x)
 		const char *ascii_art;
 		int digit_height;
 		int digit_width;
+		int spacing;
 		if (grid->box_width < max_digit_amount * 5) {
 			ascii_art = THREE_BY_THREE[digit];
 			digit_height = 3;
 			digit_width = 3;
+			spacing = 0;
 		}
-		else if (grid->box_width < max_digit_amount * 6) {
+		else if (grid->box_width < max_digit_amount * (6 + 1 /*spacing*/)) {
 			ascii_art = FIVE_BY_FIVE[digit];
 			digit_height = 5;
 			digit_width = 5;
+			spacing = 0;
 		}
 		else {
 			ascii_art = SIX_BY_FIVE[digit];
 			digit_height = 5;
 			digit_width = 6;
+			spacing = 1;
 		}
 
 		const int y = pos_y + ((grid->box_height - digit_height) / 2);
-		const int x = pos_x + ((grid->box_width - digit_amount * digit_width) / 2);
-		const int digit_offset = (digit_amount - d - 1) * digit_width;
+		const int x = pos_x + ((grid->box_width - digit_amount * (digit_width + spacing)) / 2);
+		const int digit_offset = (digit_amount - d - 1) * (digit_width + spacing);
 		for (int i = 0; i < digit_height; i++) {
-			mvwprintw(grid->grid_win, y + i, x + digit_offset, "%.*s", digit_width, ascii_art + (i * digit_width));
+			mvwprintw(grid->grid_win,
+			          y + i,
+			          x + digit_offset,
+			          "%*.*s",
+			          digit_width + spacing,
+			          digit_width,
+			          ascii_art + (i * digit_width));
 		}
 	}
 }
