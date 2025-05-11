@@ -15,6 +15,9 @@ static bool is_descending(const void *a, const void *b)
 
 static bool is_valid_score(const char *line)
 {
+	if (line[0] == '\n' || line[0] == '\0') {
+		return false;
+	}
 	for (size_t i = 0; line[i]; i++) {
 		if (line[i] == '\n') {
 			break;
