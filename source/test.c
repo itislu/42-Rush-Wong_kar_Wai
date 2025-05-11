@@ -1,3 +1,4 @@
+#include "digits.h"
 #include "header.h"
 #include "grid.h"
 #include "libft/libft.h"
@@ -60,6 +61,51 @@ void print_score(t_grid *grid, int center_width)
 	wrefresh(grid->score_win);
 }
 
+void print_number(t_grid *grid, int nbr, int pos_y, int pos_x)
+{
+	const int digit_amount = ft_nbrlen_base(nbr, 10);
+
+	if (grid->box_width < 18) {
+		// normal digits
+		const int y = pos_y + (grid->box_height / 2);
+		const int x = pos_x + ((grid->box_width - digit_amount) / 2);
+		mvwprintw(grid->grid_win, y, x, "%d", nbr);
+		return;
+	}
+
+	// right to left
+	for (int d = 0, mag = 1; d < digit_amount; d++) {
+		const int digit = nbr / mag % 10;
+		mag *= 10;
+
+		const char *ascii_art;
+		int digit_height;
+		int digit_width;
+		if (grid->box_width < 30) {
+			ascii_art = THREE_BY_THREE[digit];
+			digit_height = 3;
+			digit_width = 3;
+		}
+		else if (grid->box_width < 36) {
+			ascii_art = FIVE_BY_FIVE[digit];
+			digit_height = 5;
+			digit_width = 5;
+		}
+		else {
+			ascii_art = SIX_BY_FIVE[digit]; // TODO broken
+			digit_height = 5;
+			digit_width = 6;
+		}
+
+		const int y = pos_y + ((grid->box_height - digit_height) / 2);
+		const int x = pos_x + ((grid->box_width - digit_amount * digit_width) / 2);
+		const int digit_offset = (digit_amount - d - 1) * digit_width;
+		for (int i = 0; i < digit_height; i++) {
+			mvwprintw(grid->grid_win, y + i, x + digit_offset, "%.*s", digit_width, ascii_art + (i * digit_height));
+		}
+	}
+}
+
 void print_grid(t_grid *grid)
 {
 	int i = 0;
@@ -79,18 +125,13 @@ void print_grid(t_grid *grid)
 		// 		j++;
 		// 		continue;
 		// 	}
-			//attron(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD);
 			wattr_on(grid->grid_win, COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))) | A_BOLD, 0);
 			int y = i * grid->box_height + 1;
 			int x = j * grid->box_width + 2;
-			wmove(grid->grid_win, y, x);
 			for(int i = 0; i < grid->box_height; i++)
 				mvwprintw(grid->grid_win, y + i, x, "%*c", grid->box_width, ' ');
-			wmove(grid->grid_win, y + grid->box_height / 2, x + ((grid->box_width - ft_nbrlen_base(*grid_at(grid, i, j), 10)) / 2));
-			wprintw(grid->grid_win, "%d", *grid_at(grid, i, j));
-			//attroff(COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))));
+			print_number(grid, *grid_at(grid, i, j), y, x);
 			wattr_off(grid->grid_win, COLOR_PAIR(get_correct_color(*grid_at(grid, i, j))), 0);
-			wmove(grid->grid_win, y + grid->box_height, x); 
 			j++;
 		}
 		i++;
@@ -664,13 +705,13 @@ int main(void)
 	if (grid.size == 4)
 	{
 		grid.box_height = 3;
-		grid.box_width = 6;
 	}
 	else
 	{
 		grid.box_height = 5;
-		grid.box_width = 10;
 	}
+	grid.box_width = grid.box_height * 2;
+
 	init_windows(&grid);
 	init_grid(&grid);
 	game_loop(&grid);
