@@ -66,11 +66,14 @@ void print_score(t_grid *grid)
 void print_scoreboard(t_grid *grid)
 {
 	box(grid->scoreboard->win, 0, 0);
+	wattron(grid->scoreboard->win, A_BOLD);
+	mvwprintw(grid->scoreboard->win, 1, (grid->scoreboard->win_width - 10) / 2, "Highscores");
+	wattroff(grid->scoreboard->win, A_BOLD);
 	int i = 0;
 	while (i < grid->scoreboard->amount)
 	{
-		mvwprintw(grid->scoreboard->win, i + 1, 1, "%d.", i + 1);
-		mvwprintw(grid->scoreboard->win, i + 1, grid->scoreboard->win_width - 1 - ft_nbrlen_base(grid->scoreboard->scores[i].score, 10), "%ld", grid->scoreboard->scores[i].score);
+		mvwprintw(grid->scoreboard->win, i + 3, 1, "%d.", i + 1);
+		mvwprintw(grid->scoreboard->win, i + 3, grid->scoreboard->win_width - 1 - ft_nbrlen_base(grid->scoreboard->scores[i].score, 10), "%ld", grid->scoreboard->scores[i].score);
 		i++;
 	}
 	wrefresh(grid->scoreboard->win);
@@ -139,7 +142,8 @@ void print_grid(t_grid *grid)
 
 	clear();
 	print_score(grid);
-	print_scoreboard(grid);
+	if (grid->scoreboard->amount > 0)
+		print_scoreboard(grid);
 	box(grid->grid_win, 0, 0);
 	while (i < grid->size)
 	{
@@ -723,7 +727,10 @@ void init_windows(t_grid *grid)
 {
 	int term_width = getmaxx(stdscr);
 	grid->grid_win_width = grid->box_width * grid->size + 4 /*frame*/;
-	int total_width = grid->grid_win_width + 1 + grid->scoreboard->win_width;
+	int total_width = grid->grid_win_width;
+	if (grid->scoreboard->amount > 0) {
+		total_width += 1 + grid->scoreboard->win_width;
+	}
 		
 	grid->score_win_pos_x = (term_width - total_width) / 2;
 	grid->score_win_pos_y = 0;
@@ -736,7 +743,8 @@ void init_windows(t_grid *grid)
 	
 	grid->score_win = create_win(grid->score_win_height, grid->score_win_width, grid->score_win_pos_y, grid->score_win_pos_x);
 	grid->grid_win = create_win(grid->grid_win_height, grid->grid_win_width, grid->grid_win_pos_y, grid->grid_win_pos_x);
-	grid->scoreboard->win = create_win(grid->scoreboard->win_height, grid->scoreboard->win_width, grid->score_win_pos_y, grid->grid_win_pos_x + grid->grid_win_width + 1 /*spacing*/);
+	if (grid->scoreboard->amount > 0)
+		grid->scoreboard->win = create_win(grid->scoreboard->win_height, grid->scoreboard->win_width, grid->score_win_pos_y, grid->grid_win_pos_x + grid->grid_win_width + 1 /*spacing*/);
 }
 
 void validate_win_value(t_grid *grid)
@@ -764,14 +772,17 @@ int main(void)
 		return 1;
 	}
 
-	scoreboard.win_width = ft_max(ft_nbrlen_base(scoreboard.scores[0].score, 10) + 5 /*rank*/) + 2 /*frame*/;
+	if (scoreboard.amount > 0)
+		scoreboard.win_width = ft_max(ft_nbrlen_base(scoreboard.scores[0].score, 10) + 5 /*rank*/, 12 /*title*/) + 2 /*frame*/;
 
 	init_ncurses();
 	while (1)
 	{
 		t_grid grid = {.height_extra = 3 /*score*/ + 2 /*frame*/,
-		               .width_extra = 4 /*frame*/ + 1 /*spacing*/ + scoreboard.win_width};
+		               .width_extra = 4 /*frame*/};
 		grid.scoreboard = &scoreboard;
+		if (scoreboard.amount > 0)
+			grid.width_extra += 1 /*spacing*/ + scoreboard.win_width;
 
 		switch (popup_menu("Choose a grid size", (const char *[]){"4x4", "5x5", NULL}, NULL)) {
 		case 0:
