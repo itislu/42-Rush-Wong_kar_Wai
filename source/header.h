@@ -4,6 +4,13 @@
 #include <ncurses.h>
 #include "grid.h"
 
+#define ESCAPE 27
+
+enum e_const
+{
+	WIN_VALUE = 2048
+};
+
 enum e_colors 
 {
 	COLOR_EMPTY = 100,
@@ -29,15 +36,28 @@ enum e_colors
 	COLOR_DARK,
 };
 
-#define ESCAPE 27
+/* movement.c */
+int left_merge(t_grid *grid);
+int move_left(t_grid *grid);
+int right_merge(t_grid *grid);
+int move_right(t_grid *grid);
+int up_merge(t_grid *grid);
+int move_up(t_grid *grid);
+int down_merge(t_grid *grid);
+int move_down(t_grid *grid);
+int validate_move(t_grid *grid, int input);
 
-enum e_const
-{
-	WIN_VALUE = 2048
-};
-
-void print_grid(t_grid *grid);
+/* ncurses.c */
+bool init_ncurses(void);
 bool init_windows(t_grid *grid);
+void set_box_size(t_grid *grid);
 bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width);
+
+/* print.c */
+void print_score(t_grid *grid);
+void print_scoreboard(t_grid *grid);
+void print_grid(t_grid *grid);
+bool display_game_over(t_grid *grid);
+bool display_win(t_grid *grid);
 
 #endif

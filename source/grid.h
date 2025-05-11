@@ -29,6 +29,8 @@ typedef struct s_grid
 	t_scoreboard *scoreboard;
 } t_grid;
 
+void init_grid(t_grid *grid);
 int *grid_at(t_grid *grid, int row, int col);
+void spawn_new_number(t_grid *grid);
 
 #endif
