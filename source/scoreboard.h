@@ -3,9 +3,11 @@
 
 # include <ncurses.h>
 
+# define SCORE_FILE "./scores"
+
 typedef struct s_score 
 {
-	unsigned int score;
+	long score;
 } t_score;
 
 typedef struct s_scoreboard
@@ -15,7 +17,8 @@ typedef struct s_scoreboard
 	WINDOW *win;
 	int win_height;
 	int win_width;
-	// int min_width;
 } t_scoreboard;
+
+bool read_scorefile(t_scoreboard *scoreboard);
 
 #endif

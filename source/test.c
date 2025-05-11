@@ -3,6 +3,7 @@
 #include "grid.h"
 #include "libft/libft.h"
 #include "menu.h"
+#include "scoreboard.h"
 #include <ncurses.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -58,7 +59,7 @@ int	get_correct_color(int num)
 void print_score(t_grid *grid)
 {
 	box(grid->score_win, 0, 0);
-	mvwprintw(grid->score_win, 1, 1, "Score: %d", grid->score);
+	mvwprintw(grid->score_win, 1, 1, "Score: %ld", grid->score);
 	wrefresh(grid->score_win);
 }
 
@@ -69,7 +70,7 @@ void print_scoreboard(t_grid *grid)
 	while (i < grid->scoreboard->amount)
 	{
 		mvwprintw(grid->scoreboard->win, i + 1, 1, "%d.", i + 1);
-		mvwprintw(grid->scoreboard->win, i + 1, grid->scoreboard->win_width - 1 - ft_nbrlen_base(grid->scoreboard->scores[i].score, 10), "%d", grid->scoreboard->scores[i].score);
+		mvwprintw(grid->scoreboard->win, i + 1, grid->scoreboard->win_width - 1 - ft_nbrlen_base(grid->scoreboard->scores[i].score, 10), "%ld", grid->scoreboard->scores[i].score);
 		i++;
 	}
 	wrefresh(grid->scoreboard->win);
@@ -757,14 +758,13 @@ void validate_win_value(t_grid *grid)
 
 int main(void)
 {
-	t_scoreboard scoreboard;
+	t_scoreboard scoreboard = {0};
 	// read score file
+	if (!read_scorefile(&scoreboard)) {
+		return 1;
+	}
 
-	// for testing
-	t_score scores[12] = {{123456789}, {12345}, {8245}, {2252}, {123}, {81}, {80}, {79}, {123}, {8}, {18}, {123456789}};
-	scoreboard.scores = (t_score *)&scores;
-	scoreboard.amount = 12;
-	scoreboard.win_width = ft_nbrlen_base(scores[0].score, 10) + 5 /*rank*/ + 2 /*frame*/;
+	scoreboard.win_width = ft_max(ft_nbrlen_base(scoreboard.scores[0].score, 10) + 5 /*rank*/) + 2 /*frame*/;
 
 	init_ncurses();
 	while (1)

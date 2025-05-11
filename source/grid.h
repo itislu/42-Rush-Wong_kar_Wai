@@ -10,7 +10,7 @@ typedef struct s_grid
 	int size;
 	int box_height;
 	int box_width;
-	int score;
+	long score;
 	WINDOW *grid_win;
 	int grid_win_pos_x;
 	int grid_win_pos_y;
