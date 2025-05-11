@@ -92,7 +92,7 @@ void print_number(t_grid *grid, int nbr, int pos_y, int pos_x)
 			digit_width = 5;
 		}
 		else {
-			ascii_art = SIX_BY_FIVE[digit]; // TODO broken
+			ascii_art = SIX_BY_FIVE[digit];
 			digit_height = 5;
 			digit_width = 6;
 		}
@@ -101,7 +101,7 @@ void print_number(t_grid *grid, int nbr, int pos_y, int pos_x)
 		const int x = pos_x + ((grid->box_width - digit_amount * digit_width) / 2);
 		const int digit_offset = (digit_amount - d - 1) * digit_width;
 		for (int i = 0; i < digit_height; i++) {
-			mvwprintw(grid->grid_win, y + i, x + digit_offset, "%.*s", digit_width, ascii_art + (i * digit_height));
+			mvwprintw(grid->grid_win, y + i, x + digit_offset, "%.*s", digit_width, ascii_art + (i * digit_width));
 		}
 	}
 }
