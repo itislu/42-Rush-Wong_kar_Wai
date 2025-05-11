@@ -186,9 +186,7 @@ int main(void)
 		grid.min_width = grid.min_height * 2;
 		set_box_size(&grid);
 
-		if (!init_windows(&grid)) {
-			break;
-		}
+		init_windows(&grid);
 		init_grid(&grid);
 		bool restart = game_loop(&grid);
 		save_score(grid.score);

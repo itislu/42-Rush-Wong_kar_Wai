@@ -69,7 +69,7 @@ static WINDOW *create_win(int size_y, int size_x , int pos_y, int pox_x)
 	return (win);
 }
 
-bool init_windows(t_grid *grid)
+void init_windows(t_grid *grid)
 {
 	int term_width = getmaxx(stdscr);
 	grid->grid_win_width = grid->box_width * grid->size + 4 /*frame*/;
@@ -89,12 +89,12 @@ bool init_windows(t_grid *grid)
 	
 	grid->score_win = create_win(grid->score_win_height, grid->score_win_width, grid->score_win_pos_y, grid->score_win_pos_x);
 	if (!grid->score_win) {
-		return true;
+		return;
 	}
 	grid->grid_win = create_win(grid->grid_win_height, grid->grid_win_width, grid->grid_win_pos_y, grid->grid_win_pos_x);
 	if (!grid->grid_win) {
 		delwin(grid->score_win);
-		return true;
+		return;
 	}
 	if (grid->scoreboard->amount > 0)
 	{
@@ -102,10 +102,9 @@ bool init_windows(t_grid *grid)
 		if (!grid->scoreboard->win) {
 			delwin(grid->score_win);
 			delwin(grid->grid_win);
-			return true;
+			return;
 		}
 	}
-	return true;
 }
 
 void set_box_size(t_grid *grid)
@@ -153,9 +152,7 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 		delwin(grid->grid_win);
 		delwin(grid->score_win);
 		delwin(grid->scoreboard->win);
-		if (!init_windows(grid)) {
-			return false;
-		}
+		init_windows(grid);
 		print_grid(grid);
 	}
 	return true;
