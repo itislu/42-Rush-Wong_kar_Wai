@@ -63,9 +63,10 @@ void print_score(t_grid *grid, int center_width)
 
 void print_number(t_grid *grid, int nbr, int pos_y, int pos_x)
 {
+	const int max_digit_amount = grid->size == 4 ? 6 : 8;
 	const int digit_amount = ft_nbrlen_base(nbr, 10);
 
-	if (grid->box_width < 18) {
+	if (grid->box_width < max_digit_amount * 3) {
 		// normal digits
 		const int y = pos_y + (grid->box_height / 2);
 		const int x = pos_x + ((grid->box_width - digit_amount) / 2);
@@ -81,12 +82,12 @@ void print_number(t_grid *grid, int nbr, int pos_y, int pos_x)
 		const char *ascii_art;
 		int digit_height;
 		int digit_width;
-		if (grid->box_width < 30) {
+		if (grid->box_width < max_digit_amount * 5) {
 			ascii_art = THREE_BY_THREE[digit];
 			digit_height = 3;
 			digit_width = 3;
 		}
-		else if (grid->box_width < 36) {
+		else if (grid->box_width < max_digit_amount * 6) {
 			ascii_art = FIVE_BY_FIVE[digit];
 			digit_height = 5;
 			digit_width = 5;
