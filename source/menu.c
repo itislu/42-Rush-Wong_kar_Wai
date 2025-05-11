@@ -42,6 +42,9 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 
 		WINDOW *win = newwin(
 			height, width, (term_height - height) / 2, (term_width - width) / 2);
+		if (!win) {
+			return -1;
+		}
 		box(win, 0, 0);
 		keypad(win, true);
 	
@@ -74,14 +77,15 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 		while (true) {
 			switch (getch()) {
 			case KEY_RESIZE:
-				goto end;
+				goto inner_end;
 			case KEY_DOWN:
 				cur_option = ft_min(cur_option + 1, option_amount - 1);
-				goto end;
+				goto inner_end;
 			case KEY_UP:
 				cur_option = ft_max(cur_option - 1, 0);
-				goto end;
+				goto inner_end;
 			case '\n':
+				delwin(win);
 				return cur_option;
 			case 'q':
 			case ESCAPE:
@@ -89,8 +93,7 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 				return -1;
 			}
 		}
-	end:;
+	inner_end:;
 	delwin(win);
 	}
-
 }

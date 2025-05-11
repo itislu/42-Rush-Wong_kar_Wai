@@ -579,7 +579,9 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 		delwin(grid->grid_win);
 		delwin(grid->score_win);
 		delwin(grid->scoreboard->win);
-		init_windows(grid);
+		if (!init_windows(grid)) {
+			return false;
+		}
 		print_grid(grid);
 	}
 	return true;
@@ -667,9 +669,11 @@ short rgb_to_ncurses(int rgb)
 	return (rgb * 1000 / 255);
 }
 
-void init_ncurses(void)
+bool init_ncurses(void)
 {
-	initscr();
+	if (!initscr()) {
+		return false;
+	}
 	noecho();
 	keypad(stdscr, TRUE);
 	ESCDELAY = 0;
@@ -716,6 +720,7 @@ void init_ncurses(void)
 	init_pair(COLOR_131072, COLOR_BRIGHT, COLOR_131072);
 	init_color(COLOR_MAX, rgb_to_ncurses(57),rgb_to_ncurses(55),rgb_to_ncurses(47));
 	init_pair(COLOR_MAX, COLOR_BRIGHT, COLOR_MAX);
+	return true;
 }
 
 WINDOW *create_win(int size_y, int size_x , int pos_y, int pox_x)
@@ -725,7 +730,7 @@ WINDOW *create_win(int size_y, int size_x , int pos_y, int pox_x)
 	return (win);
 }
 
-void init_windows(t_grid *grid)
+bool init_windows(t_grid *grid)
 {
 	int term_width = getmaxx(stdscr);
 	grid->grid_win_width = grid->box_width * grid->size + 4 /*frame*/;
@@ -744,9 +749,24 @@ void init_windows(t_grid *grid)
 	grid->scoreboard->win_height = grid->score_win_height + grid->grid_win_height;
 	
 	grid->score_win = create_win(grid->score_win_height, grid->score_win_width, grid->score_win_pos_y, grid->score_win_pos_x);
+	if (!grid->score_win) {
+		return false;
+	}
 	grid->grid_win = create_win(grid->grid_win_height, grid->grid_win_width, grid->grid_win_pos_y, grid->grid_win_pos_x);
+	if (!grid->grid_win) {
+		delwin(grid->score_win);
+		return false;
+	}
 	if (grid->scoreboard->amount > 0)
+	{
 		grid->scoreboard->win = create_win(grid->scoreboard->win_height, grid->scoreboard->win_width, grid->score_win_pos_y, grid->grid_win_pos_x + grid->grid_win_width + 1 /*spacing*/);
+		if (!grid->scoreboard->win) {
+			delwin(grid->score_win);
+			delwin(grid->grid_win);
+			return false;
+		}
+	}
+	return true;
 }
 
 void validate_win_value(t_grid *grid)
@@ -769,7 +789,9 @@ void validate_win_value(t_grid *grid)
 int main(void)
 {
 	t_scoreboard scoreboard = {0};
-	init_ncurses();
+	if (!init_ncurses()) {
+		return 0;
+	}
 	while (1)
 	{
 		if (!read_scorefile(&scoreboard)) {
@@ -802,12 +824,15 @@ int main(void)
 		grid.min_width = grid.min_height * 2;
 		set_box_size(&grid);
 
-		init_windows(&grid);
+		if (!init_windows(&grid)) {
+			break;
+		}
 		init_grid(&grid);
 		bool restart = game_loop(&grid);
 		save_score(grid.score);
 		delwin(grid.grid_win);
 		delwin(grid.score_win);
+		delwin(grid.scoreboard->win);
 		ft_free_and_null((void **)&scoreboard.scores);
 		if (restart == false)
 			break;

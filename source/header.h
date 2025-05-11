@@ -37,7 +37,7 @@ enum e_const
 };
 
 void print_grid(t_grid *grid);
-void init_windows(t_grid *grid);
+bool init_windows(t_grid *grid);
 bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width);
 
 #endif

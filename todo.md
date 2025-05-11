@@ -6,8 +6,8 @@
 - [X] ASCII numbers
 - [X] Validate `WIN_VALUE`
   - First just check it, use default or closest higher. Later, maybe print it in the scoreboard window.
-- [ ] Storing scores
-- [ ] Displaying scores
+- [X] Storing scores
+- [X] Displaying scores
 - [ ] Error handling of function returns
 
 
