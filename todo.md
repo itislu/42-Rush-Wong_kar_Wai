@@ -4,6 +4,7 @@
 - [X] Win condition and prompt to continue
 - [X] Fixing resizing everywhere
 - [X] ASCII numbers
+- [ ] Validate `WIN_VALUE` - either quit with error, or print warning and use 2048
 - [ ] Storing scores
 - [ ] Displaying scores
 - [ ] Error handling of function returns

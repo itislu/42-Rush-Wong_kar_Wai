@@ -469,7 +469,7 @@ bool is_win_condition(t_grid *grid)
 		j = 0;
 		while (j < grid->size)
 		{
-			if (*grid_at(grid, i, j) == 8)
+			if (*grid_at(grid, i, j) == 8) // TODO WIN_VALUE
 			{
 				win = true;
 				return (true);
