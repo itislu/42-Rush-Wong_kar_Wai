@@ -14,7 +14,7 @@
 ## Optional
 
 - [X] empty boxes color
-- [ ] Game over should only exit with usual exit keys
+- [X] Game over should only exit with usual exit keys
 - [ ] left and right mouse click for move
 - [ ] `wbkgd()` for dimmed background when menu
 - [ ] ASCII art adjusts to terminal size

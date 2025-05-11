@@ -177,18 +177,18 @@ void init_grid(t_grid *grid)
 {
 	ft_memset(grid->data, 0, sizeof(int) * grid->size * grid->size);
 	srand(time(NULL));
-	// *grid_at(grid, 0, 0) = 512;
-	// *grid_at(grid, 0, 1) = 1024;
-	// *grid_at(grid, 0, 2) = 2048;
-	// *grid_at(grid, 0, 3) = 4096;
-	// *grid_at(grid, 1, 0) = 8192;
-	// *grid_at(grid, 1, 1) = 16384;
-	// *grid_at(grid, 1, 2) = 32768;
-	// *grid_at(grid, 1, 3) = 65536;
-	// *grid_at(grid, 2, 0) = 131072;
-	// *grid_at(grid, 2, 1) = 262144;
-	spawn_new_number(grid);
-	spawn_new_number(grid);
+	*grid_at(grid, 0, 0) = 512;
+	*grid_at(grid, 0, 1) = 1024;
+	*grid_at(grid, 0, 2) = 2048;
+	*grid_at(grid, 0, 3) = 4096;
+	*grid_at(grid, 1, 0) = 8192;
+	*grid_at(grid, 1, 1) = 16384;
+	*grid_at(grid, 1, 2) = 32768;
+	*grid_at(grid, 1, 3) = 65536;
+	*grid_at(grid, 2, 0) = 131072;
+	*grid_at(grid, 2, 1) = 262144;
+	// spawn_new_number(grid);
+	// spawn_new_number(grid);
 }
 
 int left_merge(t_grid *grid)
@@ -495,6 +495,19 @@ bool is_win_condition(t_grid *grid)
 	return (false);
 }
 
+bool display_game_over(t_grid *grid)
+{
+	switch (popup_menu("GAME OVER", (const char *[]){"Restart", "Quit", NULL}, grid)) {
+	case 0:
+		print_grid(grid);
+		return (true);
+	case 1:
+		return (false);
+	default:
+		return (false);
+	}
+}
+
 bool display_win(t_grid *grid)
 {
 	switch (popup_menu("You win!", (const char *[]){"Continue", "Quit", NULL}, grid)) {
@@ -534,18 +547,20 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 	return true;
 }
 
-void game_loop(t_grid *grid)
+bool game_loop(t_grid *grid)
 {
 	int input;
 
 	while (1)
 	{
 		if (!continue_if_term_size_ok(grid, grid->box_height * grid->size, grid->box_width * grid->size))
-			return;
+			return (false);
 		if (validate_if_lost(grid) == 0)
 		{
-			wprintw(grid->grid_win, "\nGame Over\n");
-			wgetch(grid->grid_win);
+			//wprintw(grid->grid_win, "\nGame Over\n");
+			//wgetch(grid->grid_win);
+			if (display_game_over(grid))
+				return (true);
 			break;
 		}
 
@@ -601,13 +616,14 @@ void game_loop(t_grid *grid)
 		{
 			print_grid(grid);
 			if (!display_win(grid))
-				return;
+				return (false);
 		}
 		else 
 		{
 			spawn_new_number(grid);
 		}
 	}
+	return (false);
 }
 
 short rgb_to_ncurses(int rgb)
@@ -682,36 +698,42 @@ void init_windows(t_grid *grid)
 int main(void)
 {
 	init_ncurses();
-	t_grid grid = {0};
-	
-	switch (popup_menu("Choose a grid size", (const char *[]){"4x4", "5x5", NULL}, NULL)) {
-	case 0:
-		grid.size = 4;
-		break;
-	case 1:
-		grid.size = 5;
-		break;
-	default:
-		endwin();
-		return 0;
-	}
-
-	int grid_data[grid.size][grid.size];
-	grid.data = (int *)grid_data;
-	if (grid.size == 4)
+	while (1)
 	{
-		grid.box_height = 3;
-	}
-	else
-	{
-		grid.box_height = 5;
-	}
-	grid.box_width = grid.box_height * 2;
+		t_grid grid = {0};
+		
+		switch (popup_menu("Choose a grid size", (const char *[]){"4x4", "5x5", NULL}, NULL)) {
+		case 0:
+			grid.size = 4;
+			break;
+		case 1:
+			grid.size = 5;
+			break;
+		default:
+			endwin();
+			return 0;
+		}
 
-	init_windows(&grid);
-	init_grid(&grid);
-	game_loop(&grid);
-	delwin(grid.grid_win);
-	delwin(grid.score_win);
+		int grid_data[grid.size][grid.size];
+		grid.data = (int *)grid_data;
+		if (grid.size == 4)
+		{
+			grid.box_height = 3;
+		}
+		else
+		{
+			grid.box_height = 5;
+		}
+		grid.box_width = grid.box_height * 2;
+
+		init_windows(&grid);
+		init_grid(&grid);
+		bool restart =  game_loop(&grid);
+		delwin(grid.grid_win);
+		delwin(grid.score_win);
+		if (restart == false)
+			break;
+	}
 	endwin();
+	return (0);
 }
