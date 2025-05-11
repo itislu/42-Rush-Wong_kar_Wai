@@ -7,7 +7,7 @@ include				$(MAKEFILES_DIR)/print.mk
 
 # *************************** BUILD PREPARATION ****************************** #
 
-export				CC CFLAGS MAKECMDGOALS MAKEFLAGS
+export				CC CFLAGS MAKEFLAGS
 
 
 #	Build artifacts
