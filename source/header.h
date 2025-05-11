@@ -6,7 +6,8 @@
 
 enum e_colors 
 {
-	COLOR_2 = 100,
+	COLOR_EMPTY = 100,
+	COLOR_2,
 	COLOR_4,
 	COLOR_8,
 	COLOR_16,
@@ -23,8 +24,8 @@ enum e_colors
 	COLOR_32768,
 	COLOR_65536,
 	COLOR_131072,
+	COLOR_MAX,
 	COLOR_DARK,
-	COLOR_EMPTY,
 };
 
 #define ESCAPE 27
