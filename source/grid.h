@@ -12,7 +12,7 @@ typedef struct s_grid
 	int score;
 	WINDOW *grid_win;
 	WINDOW *score_win;
-	// int win_value;
+	int win_value;
 } t_grid;
 
 int *grid_at(t_grid *grid, int row, int col);

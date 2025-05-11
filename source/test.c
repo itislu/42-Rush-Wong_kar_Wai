@@ -695,6 +695,28 @@ void init_windows(t_grid *grid)
 	grid->score_win = create_win(3, grid->box_width * grid->size + 4, 0, 0);
 }
 
+void validate_win_value(t_grid *grid)
+{
+	int result = 2;
+	int n = grid->size * grid->size;
+	while (n > 0)
+	{
+		if (result == WIN_VALUE)
+		{
+			grid->win_value = WIN_VALUE;
+			printw("result %d == WIN_VALUE %d", result, WIN_VALUE);
+			getch();
+			return ;
+		}
+		result *= 2;
+		n--;
+	}
+	grid->win_value = 69;
+	printw("NOT VALID: %d\n", WIN_VALUE);
+	printw("grid->win_value: %d", grid->win_value);
+	getch();
+}
+
 int main(void)
 {
 	init_ncurses();
@@ -713,7 +735,8 @@ int main(void)
 			endwin();
 			return 0;
 		}
-
+		validate_win_value(&grid);
+		break;
 		int grid_data[grid.size][grid.size];
 		grid.data = (int *)grid_data;
 		if (grid.size == 4)
