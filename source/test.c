@@ -72,7 +72,7 @@ void print_scoreboard(t_grid *grid)
 	mvwprintw(grid->scoreboard->win, 1, (grid->scoreboard->win_width - 10) / 2, "Highscores");
 	wattroff(grid->scoreboard->win, A_BOLD);
 	int i = 0;
-	while (i < grid->scoreboard->amount)
+	while (i < grid->scoreboard->amount && i + 4 < grid->scoreboard->win_height)
 	{
 		mvwprintw(grid->scoreboard->win, i + 3, 1, "%d.", i + 1);
 		mvwprintw(grid->scoreboard->win, i + 3, grid->scoreboard->win_width - 1 - ft_nbrlen_base(grid->scoreboard->scores[i].score, 10), "%ld", grid->scoreboard->scores[i].score);
