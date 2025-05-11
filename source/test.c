@@ -55,12 +55,18 @@ int	get_correct_color(int num)
 	}
 }
 
-void print_score(t_grid *grid, int center_width)
+void print_score(t_grid *grid)
 {
-	mvwin(grid->score_win, 0, center_width);
 	box(grid->score_win, 0, 0);
 	mvwprintw(grid->score_win, 1, 1, "Score: %d", grid->score);
 	wrefresh(grid->score_win);
+}
+
+void print_scoreboard(t_grid *grid)
+{
+	box(grid->scoreboard->win, 0, 0);
+	mvwprintw(grid->scoreboard->win, 1, 1, "1. %d", grid->scoreboard->scores[0].score);
+	wrefresh(grid->scoreboard->win);
 }
 
 void print_number(t_grid *grid, int nbr, int pos_y, int pos_x)
@@ -123,10 +129,10 @@ void print_grid(t_grid *grid)
 {
 	int i = 0;
 	int j;
+
 	clear();
-	int term_width = getmaxx(stdscr);
-	print_score(grid, (term_width - (grid->box_width * grid->size) - 4) / 2);
-	mvwin(grid->grid_win, 3, (term_width - (grid->box_width * grid->size) - 4) / 2);
+	print_score(grid);
+	print_scoreboard(grid);
 	box(grid->grid_win, 0, 0);
 	while (i < grid->size)
 	{
@@ -147,6 +153,7 @@ void print_grid(t_grid *grid)
 	}
 	wrefresh(grid->score_win);
 	wrefresh(grid->grid_win);
+	wrefresh(grid->scoreboard->win);
 }
 
 void spawn_new_number(t_grid *grid)
@@ -558,6 +565,7 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 		refresh();
 		delwin(grid->grid_win);
 		delwin(grid->score_win);
+		delwin(grid->scoreboard->win);
 		init_windows(grid);
 		print_grid(grid);
 	}
@@ -706,8 +714,22 @@ WINDOW *create_win(int size_y, int size_x , int pos_y, int pox_x)
 
 void init_windows(t_grid *grid)
 {
-	grid->grid_win = create_win(grid->box_height * grid->size + 2, grid->box_width * grid->size + 4, 3, 0);
-	grid->score_win = create_win(3, grid->box_width * grid->size + 4, 0, 0);
+	int term_width = getmaxx(stdscr);
+	grid->grid_win_width = grid->box_width * grid->size + 4 /*frame*/;
+	int total_width = grid->grid_win_width + 1 + grid->scoreboard->win_width;
+		
+	grid->score_win_pos_x = (term_width - total_width) / 2;
+	grid->score_win_pos_y = 0;
+	grid->score_win_height = 3;
+	grid->grid_win_pos_x = grid->score_win_pos_x;
+	grid->grid_win_pos_y = grid->score_win_height;
+	grid->grid_win_height = grid->box_height * grid->size + 2 /*frame*/;
+	grid->score_win_width = grid->grid_win_width;
+	grid->scoreboard->win_height = grid->score_win_height + grid->grid_win_height;
+	
+	grid->score_win = create_win(grid->score_win_height, grid->score_win_width, grid->score_win_pos_y, grid->score_win_pos_x);
+	grid->grid_win = create_win(grid->grid_win_height, grid->grid_win_width, grid->grid_win_pos_y, grid->grid_win_pos_x);
+	grid->scoreboard->win = create_win(grid->scoreboard->win_height, grid->scoreboard->win_width, grid->score_win_pos_y, grid->grid_win_pos_x + grid->grid_win_width + 1 /*spacing*/);
 }
 
 void validate_win_value(t_grid *grid)
@@ -736,12 +758,14 @@ int main(void)
 	t_score scores[4] = {{12345678}, {123}, {8}, {0}};
 	scoreboard.scores = (t_score *)&scores;
 	scoreboard.amount = 4;
+	scoreboard.win_width = ft_nbrlen_base(scores[0].score, 10) + 5 /*rank*/ + 2 /*frame*/;
 
 	init_ncurses();
 	while (1)
 	{
 		t_grid grid = {.height_extra = 3 /*score*/ + 2 /*frame*/,
-		               .width_extra = 4 /*frame*/};
+		               .width_extra = 4 /*frame*/ + 1 /*spacing*/ + scoreboard.win_width};
+		grid.scoreboard = &scoreboard;
 
 		switch (popup_menu("Choose a grid size", (const char *[]){"4x4", "5x5", NULL}, NULL)) {
 		case 0:

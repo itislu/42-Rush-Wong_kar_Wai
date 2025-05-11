@@ -59,6 +59,7 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 		{
 			touchwin(grid->score_win);
 			touchwin(grid->grid_win);
+			touchwin(grid->scoreboard->win);
 		}
 		touchwin(win);
 		refresh();
@@ -66,6 +67,7 @@ int popup_menu(const char *title, const char *options[], t_grid *grid)
 		{
 			wrefresh(grid->score_win);
 			wrefresh(grid->grid_win);
+			wrefresh(grid->scoreboard->win);
 		}
 		wrefresh(win);
 
