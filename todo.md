@@ -15,3 +15,4 @@
 - [ ] Game over should only exit with usual exit keys
 - [ ] left and right mouse click for move
 - [ ] `wbkgd()` for dimmed background when menu
+- [ ] Font adjusts to terminal size
