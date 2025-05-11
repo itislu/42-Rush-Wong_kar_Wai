@@ -565,7 +565,9 @@ bool continue_if_term_size_ok(t_grid *grid, int min_height, int min_width)
 	while (y < min_height || x < min_width)
 	{
 		clear();
-		printw("SMALL: y: %d x: %d", y, x);
+		mvprintw(0, 0, "TERMINAL TOO SMALL");
+		mvprintw(1, 0, "  minimum: y: %d x: %d", min_height, min_width);
+		mvprintw(2, 0, "  current: y: %d x: %d", y, x);
 		int input = ft_tolower(getch());
 		if (input == 'q' || input == ESCAPE)
 			return false;
