@@ -65,7 +65,13 @@ void print_score(t_grid *grid)
 void print_scoreboard(t_grid *grid)
 {
 	box(grid->scoreboard->win, 0, 0);
-	mvwprintw(grid->scoreboard->win, 1, 1, "1. %d", grid->scoreboard->scores[0].score);
+	int i = 0;
+	while (i < grid->scoreboard->amount)
+	{
+		mvwprintw(grid->scoreboard->win, i + 1, 1, "%d.", i + 1);
+		mvwprintw(grid->scoreboard->win, i + 1, grid->scoreboard->win_width - 1 - ft_nbrlen_base(grid->scoreboard->scores[i].score, 10), "%d", grid->scoreboard->scores[i].score);
+		i++;
+	}
 	wrefresh(grid->scoreboard->win);
 }
 
@@ -755,9 +761,9 @@ int main(void)
 	// read score file
 
 	// for testing
-	t_score scores[4] = {{12345678}, {123}, {8}, {0}};
+	t_score scores[12] = {{123456789}, {12345}, {8245}, {2252}, {123}, {81}, {80}, {79}, {123}, {8}, {18}, {123456789}};
 	scoreboard.scores = (t_score *)&scores;
-	scoreboard.amount = 4;
+	scoreboard.amount = 12;
 	scoreboard.win_width = ft_nbrlen_base(scores[0].score, 10) + 5 /*rank*/ + 2 /*frame*/;
 
 	init_ncurses();
